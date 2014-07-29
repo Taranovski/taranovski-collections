@@ -29,7 +29,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
          * @param next
          * @param previous
          */
-        public MyNode(T value, MyNode next, MyNode previous) {
+        public MyNode(T value, MyNode<T> next, MyNode<T> previous) {
             this.value = value;
             this.next = next;
             this.previous = previous;
@@ -37,8 +37,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
         private T value;
 
-        private MyNode next;
-        private MyNode previous;
+        private MyNode<T> next;
+        private MyNode<T> previous;
 
         /**
          * @return the value
@@ -57,48 +57,51 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
         /**
          * @return the next
          */
-        public MyNode getNext() {
+        public MyNode<T> getNext() {
             return next;
         }
 
         /**
          * @param next the next to set
          */
-        public void setNext(MyNode next) {
+        public void setNext(MyNode<T> next) {
             this.next = next;
         }
 
         /**
          * @return the previous
          */
-        public MyNode getPrevious() {
+        public MyNode<T> getPrevious() {
             return previous;
         }
 
         /**
          * @param previous the previous to set
          */
-        public void setPrevious(MyNode previous) {
+        public void setPrevious(MyNode<T> previous) {
             this.previous = previous;
         }
 
     }
 
     private int size;
-    private MyNode start;
-    private MyNode end;
+    private MyNode<T> start;
+    private MyNode<T> end;
 
     /**
      *
      */
     public MyLinkedList() {
+        start = null;
+        end = null;
+        size = 0;
     }
 
     /**
      *
      * @param c
      */
-    public MyLinkedList(MyList c) {
+    public MyLinkedList(MyList<T> c) {
 
     }
 
@@ -117,19 +120,21 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
+     * final version
      *
      * @return
      */
     public T getFirst() {
-        return null;
+        return start == null ? null : start.getValue();
     }
 
     /**
+     * final version
      *
      * @return
      */
     public T getLast() {
-        return null;
+        return end == null ? null : end.getValue();
     }
 
     /**
@@ -158,12 +163,13 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
             MyNode<T> currentMyNode = end;
 
             /**
+             * final version
              *
              * @return
              */
             @Override
             public boolean hasNext() {
-                return currentMyNode.getPrevious() == null;
+                return currentMyNode != null;
             }
 
             /**
@@ -172,8 +178,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
              */
             @Override
             public T next() {
+                T value = currentMyNode.getValue();
                 currentMyNode = currentMyNode.getPrevious();
-                return currentMyNode.getValue();
+                return value;
             }
 
             /**
