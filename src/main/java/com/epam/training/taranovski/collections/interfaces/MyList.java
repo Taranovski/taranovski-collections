@@ -3,21 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.epam.training.taranovski.collections.list;
+package com.epam.training.taranovski.collections.interfaces;
 
 /**
  *
  * @author user
+ * @param <T>
  */
-public interface MyList<T> extends Iterable {
+public interface MyList<T> extends Iterable<T> {
 
-    void add(T e);
+    boolean add(T e);
 
-    void add(int index, T e);
+    boolean add(int index, T e);
 
-    void addAll(T[] c);
+    boolean addAll(T[] c);
 
-    void addAll(int index, T[] c);
+    boolean addAll(int index, T[] c);
 
     T get(int index);
 
@@ -27,7 +28,7 @@ public interface MyList<T> extends Iterable {
 
     boolean isEmpty();
 
-    void set(int index, T e);
+    boolean set(int index, T e);
 
     int indexOf(T o);
 
