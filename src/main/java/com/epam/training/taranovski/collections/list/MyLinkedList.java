@@ -35,9 +35,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
             this.next = next;
             this.previous = previous;
         }
-        
+
         private T value;
-        
+
         private MyNode<T> next;
         private MyNode<T> previous;
 
@@ -82,9 +82,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
         public void setPrevious(MyNode<T> previous) {
             this.previous = previous;
         }
-        
+
     }
-    
+
     private int size;
     private MyNode<T> start;
     private MyNode<T> end;
@@ -116,8 +116,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
         if (start == null) {
             start = new MyNode<>(e, null, null);
             end = start;
-        }
-        if (start == end) {
+        } else if (start == end) {
             start = new MyNode<>(e, end, null);
             end.setPrevious(start);
         } else {
@@ -136,8 +135,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
         if (end == null) {
             end = new MyNode<>(e, null, null);
             start = end;
-        }
-        if (end == start) {
+        } else if (end == start) {
             end = new MyNode<>(e, null, start);
             start.setNext(end);
         } else {
@@ -188,6 +186,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
             start = start.getNext();
             start.setPrevious(null);
         }
+        size--;
         return item;
     }
 
@@ -199,7 +198,16 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
         if (end == null) {
             throw new MyIndexOutOfBoundsException();
         }
-        
+        T item = end.getValue();
+        if (end == start) {
+            end = null;
+            start = null;
+        } else {
+            end = end.getPrevious();
+            end.setNext(null);
+        }
+        size--;
+        return item;
     }
 
     /**
@@ -208,7 +216,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     public Iterator<T> descendingIterator() {
         return new Iterator<T>() {
-            
+
             MyNode<T> currentMyNode = end;
 
             /**
@@ -244,10 +252,18 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
                     throw new MyIndexOutOfBoundsException();
                 }
                 if (currentMyNode == start) {
-                    
-                }
-                if (currentMyNode == end) {
-                    
+                    if (start == end) {
+                        start = null;
+                        end = null;
+                    } else {
+                        start = start.getNext();
+                        start.setPrevious(null);
+                        currentMyNode = null;
+                    }
+                } else if (currentMyNode == end) {
+                    end = end.getPrevious();
+                    end.setNext(null);
+                    currentMyNode = end;
                 } else {
                     MyNode prevMyNode = currentMyNode.getPrevious();
                     MyNode nextMyNode = currentMyNode.getNext();
@@ -257,7 +273,6 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
                 }
                 size--;
             }
-            
         };
     }
 
@@ -267,7 +282,65 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public Iterator<T> iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new Iterator<T>() {
+
+            MyNode<T> currentMyNode = start;
+
+            /**
+             * final version
+             *
+             * @return
+             */
+            @Override
+            public boolean hasNext() {
+                return currentMyNode != null;
+            }
+
+            /**
+             *
+             * @return
+             */
+            @Override
+            public T next() {
+                if (currentMyNode == null) {
+                    throw new MyIndexOutOfBoundsException();
+                }
+                T value = currentMyNode.getValue();
+                currentMyNode = currentMyNode.getNext();
+                return value;
+            }
+
+            /**
+             *
+             */
+            @Override
+            public void remove() {
+                if (currentMyNode == null) {
+                    throw new MyIndexOutOfBoundsException();
+                }
+                if (currentMyNode == start) {
+                    if (start == end) {
+                        start = null;
+                        end = null;
+                    } else {
+                        start = start.getNext();
+                        start.setPrevious(null);
+                        currentMyNode = start;
+                    }
+                } else if (currentMyNode == end) {
+                    end = end.getPrevious();
+                    end.setNext(null);
+                    currentMyNode = null;
+                } else {
+                    MyNode prevMyNode = currentMyNode.getPrevious();
+                    MyNode nextMyNode = currentMyNode.getNext();
+                    prevMyNode.setNext(nextMyNode);
+                    nextMyNode.setPrevious(prevMyNode);
+                    currentMyNode = nextMyNode;
+                }
+                size--;
+            }
+        };
     }
 
     /**
@@ -276,8 +349,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     @Override
-    public boolean add(Object e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean add(T e) {
+        this.addLast(e);
+        return e == end;
     }
 
     /**
@@ -287,8 +361,20 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     @Override
-    public boolean add(int index, Object e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean add(int index, T e) {
+        if (index < 0 || index > size) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        MyNode<T> node;
+        int i = 0;
+        for (node = start; i < index; node = node.getNext()) {
+            i++;
+        }
+        MyNode<T> prev = node.getPrevious();
+        MyNode<T> insert = new MyNode<>(e, node, prev);
+        prev.setNext(insert);
+        node.setPrevious(insert);
+        return this.get(index) == e;
     }
 
     /**
@@ -297,8 +383,12 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     @Override
-    public boolean addAll(Object[] c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean addAll(T[] c) {
+        boolean success = true;
+        for (T item : c) {
+            success = success & this.add(item);
+        }
+        return success;
     }
 
     /**
@@ -308,8 +398,25 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     @Override
-    public boolean addAll(int index, Object[] c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean addAll(int index, T[] c) {
+        if (index < 0 || index > size) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        boolean success = true;
+        MyNode<T> node;
+        int i = 0;
+        for (node = start; i < index; node = node.getNext()) {
+            i++;
+        }
+        MyNode<T> prev = node.getPrevious();
+        MyNode<T> tempEnd = end;
+        
+        end = prev;
+        this.addAll(c);
+        end.setNext(node);
+        end = tempEnd;
+        
+        return success;
     }
 
     /**
@@ -319,7 +426,15 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public T get(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (index < 0 || index > size) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        MyNode<T> node;
+        int i = 0;
+        for (node = start; i < index; node = node.getNext()) {
+            i++;
+        }
+        return node.getValue();
     }
 
     /**
@@ -329,7 +444,19 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public T remove(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (index < 0 || index > size) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        MyNode<T> node;
+        int i = 0;
+        for (node = start; i < index; node = node.getNext()) {
+            i++;
+        }
+        MyNode<T> prev = node.getPrevious();
+        MyNode<T> next = node.getNext();
+        prev.setNext(next);
+        next.setPrevious(prev);
+        return node.getValue();
     }
 
     /**
@@ -337,7 +464,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        start = null;
+        end = null;
+        size = 0;
     }
 
     /**
@@ -346,7 +475,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return size == 0;
     }
 
     /**
@@ -356,8 +485,17 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     @Override
-    public boolean set(int index, Object e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean set(int index, T e) {
+        if (index < 0 || index > size) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        MyNode<T> node;
+        int i = 0;
+        for (node = start; i < index; node = node.getNext()) {
+            i++;
+        }
+        node.setValue(e);
+        return node.getValue() == e;
     }
 
     /**
@@ -366,8 +504,15 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     @Override
-    public int indexOf(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int indexOf(T o) {
+        int index = 0;
+        for (T item : this) {
+            if (item.equals(o)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 
     /**
@@ -376,7 +521,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return size;
     }
 
     /**
@@ -385,7 +530,16 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public T[] toArray() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (size == 0) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        T[] array = (T[]) java.lang.reflect.Array.newInstance(start.getValue().getClass(), size);
+        int i = 0;
+        for (T item : this) {
+            array[i] = item;
+            i++;
+        }
+        return array;
     }
 
     /**
@@ -394,8 +548,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     @Override
-    public boolean offer(Object e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean offer(T e) {
+        return this.add(e);
     }
 
     /**
@@ -404,7 +558,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public T peek() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.getFirst();
     }
 
     /**
@@ -413,7 +567,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public T poll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.removeFirst();
     }
 
     /**
@@ -422,8 +576,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     @Override
-    public boolean push(Object e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean push(T e) {
+        return this.add(e);
     }
 
     /**
@@ -432,7 +586,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public T pop() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.removeLast();
     }
-    
+
 }
