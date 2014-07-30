@@ -5,8 +5,10 @@
  */
 package com.epam.training.taranovski.collections.list;
 
+import com.epam.training.taranovski.collections.exceptions.MyIndexOutOfBoundsException;
 import com.epam.training.taranovski.collections.interfaces.MyList;
 import com.epam.training.taranovski.collections.interfaces.MyRandomAccess;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -21,11 +23,9 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
     private int capacity;
     private int size;
     private Object[] array;
-    
-    
-    
+
     /**
-     *
+     * default constructor
      */
     public MyArrayList() {
         capacity = DEFAULT_CAPACITY;
@@ -34,40 +34,77 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
     }
 
     /**
+     * constructor from another my list
      *
-     * @param c
+     * @param c a list of values to create from
      */
-    public MyArrayList(MyList c) {
+    public MyArrayList(MyList<T> c) {
+        size = c.size();
+        capacity = (int) (size + size * CAPACITY_INCREASE_FACTOR);
+        array = new Object[capacity];
+        for (T item : c) {
+            this.add(item);
+        }
     }
 
     /**
+     * constructor with initian capacity
      *
-     * @param initialCapacity
+     * @param initialCapacity initial capacity
      */
     public MyArrayList(int initialCapacity) {
+        capacity = initialCapacity;
+        size = 0;
+        array = new Object[capacity];
+
     }
 
     /**
+     * ensures a given capacity
      *
-     * @param minCapacity
+     * @param minCapacity capacity to ensure
      */
     public void ensureCapacity(int minCapacity) {
+        if (capacity < minCapacity) {
+            capacity = minCapacity;
+            Object[] temp = array;
+            array = new Object[capacity];
+
+            System.arraycopy(temp, 0, array, 0, temp.length);
+        }
     }
 
     /**
      *
      */
     public void trimToSize() {
+        if (capacity > size) {
+            capacity = size;
+            Object[] temp = array;
+            array = new Object[capacity];
+
+            System.arraycopy(temp, 0, array, 0, capacity);
+        }
+
     }
 
     /**
-     *
-     * @param e
-     * @return
+     * add an element to list
+     * @param e element to add
+     * @return if add operation was successfull
      */
     @Override
     public boolean add(T e) {
+        if (size == capacity) {
+            capacity = (int) (size + size * CAPACITY_INCREASE_FACTOR);
+            Object[] temp = array;
+            array = new Object[capacity];
+
+            System.arraycopy(temp, 0, array, 0, temp.length);
+        }
         array[size] = e;
+        size++;
+        return array[size - 1] == e;
     }
 
     /**
@@ -78,7 +115,10 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public boolean add(int index, T e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (index < 0 || index > size || size == 0) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        
     }
 
     /**
@@ -88,7 +128,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public boolean addAll(T[] c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     /**
@@ -99,44 +139,51 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public boolean addAll(int index, T[] c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     /**
-     *
-     * @param index
-     * @return
+     * get an item by index
+     * @param index index if item to get
+     * @return item
      */
     @Override
     public T get(int index) {
+        if (index < 0 || index > size || size == 0) {
+            throw new MyIndexOutOfBoundsException();
+        }
         return (T) array[index];
     }
 
     /**
-     *
-     * @param index
-     * @return
+     * remove item from list
+     * @param index index of item to remove
+     * @return item
      */
     @Override
     public T remove(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (index < 0 || index > size || size == 0) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        
     }
 
     /**
-     *
+     * clear the list
      */
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Arrays.fill(array, null);
+        size = 0;
     }
 
     /**
-     *
-     * @return
+     * check if the list is empty
+     * @return if the list is empty
      */
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return size == 0;
     }
 
     /**
@@ -147,7 +194,11 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public boolean set(int index, T e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (index < 0 || index > size || size == 0) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        array[index] = e;
+        return array[index] == e;
     }
 
     /**
@@ -157,16 +208,16 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public int indexOf(T o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     /**
-     *
-     * @return
+     * size of the list
+     * @return list size
      */
     @Override
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return size;
     }
 
     /**
@@ -175,7 +226,10 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public T[] toArray() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (size == 0) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        return (T[]) Arrays.copyOf(array, size);
     }
 
     /**
@@ -184,7 +238,24 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public Iterator<T> iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new Iterator<T>(){
+
+            @Override
+            public boolean hasNext() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public T next() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+            
+        };
     }
 
 }
