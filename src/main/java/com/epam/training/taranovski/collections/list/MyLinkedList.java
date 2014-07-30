@@ -19,13 +19,13 @@ import java.util.Iterator;
 public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
     /**
-     *
+     * node class
      * @param <T>
      */
     private static class MyNode<T> {
 
         /**
-         *
+         * constructor
          * @param value
          * @param next
          * @param previous
@@ -90,7 +90,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     private MyNode<T> end;
 
     /**
-     *
+     * default constructor
      */
     public MyLinkedList() {
         start = null;
@@ -99,8 +99,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @param c
+     * constructor from another my list
+     * @param c a list of values to create from
      */
     public MyLinkedList(MyList<T> c) {
         for (T item : c) {
@@ -109,8 +109,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @param e
+     * adds an element to the start of the list
+     * @param e item to add
      */
     public void addFirst(T e) {
         if (start == null) {
@@ -128,8 +128,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @param e
+     * adds an element to the end of the list
+     * @param e item to add
      */
     public void addLast(T e) {
         if (end == null) {
@@ -147,9 +147,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     * final version
+     * get a first item in the list
      *
-     * @return
+     * @return first item in the list
      */
     public T getFirst() {
         if (start == null) {
@@ -159,9 +159,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     * final version
+     * get a last item in the list
      *
-     * @return
+     * @return last item in the list
      */
     public T getLast() {
         if (end == null) {
@@ -171,7 +171,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public T removeFirst() {
@@ -351,7 +351,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     @Override
     public boolean add(T e) {
         this.addLast(e);
-        return e == end;
+        return e == end.getValue();
     }
 
     /**
@@ -456,11 +456,12 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
         MyNode<T> next = node.getNext();
         prev.setNext(next);
         next.setPrevious(prev);
+        size--;
         return node.getValue();
     }
 
     /**
-     *
+     * clears the list
      */
     @Override
     public void clear() {
@@ -470,8 +471,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @return
+     * checks if the list is empty
+     * @return if the list is empty
      */
     @Override
     public boolean isEmpty() {
@@ -499,9 +500,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @param o
-     * @return
+     * get an index of an item
+     * @param o item to find
+     * @return index of a given item in the list or -1 if no item found
      */
     @Override
     public int indexOf(T o) {
@@ -516,8 +517,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @return
+     * gets a size of the list
+     * @return size of the list
      */
     @Override
     public int size() {
@@ -525,8 +526,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @return
+     * presents a list as an array
+     * @return an array which consists of all the elements of the list
      */
     @Override
     public T[] toArray() {
@@ -543,9 +544,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @param e
-     * @return
+     * adds an item to the end of the queue (end of the list)
+     * @param e item to add
+     * @return if the item successfully added
      */
     @Override
     public boolean offer(T e) {
@@ -553,8 +554,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @return
+     * get an element of queue without delete
+     * @return an element from queue
      */
     @Override
     public T peek() {
@@ -562,8 +563,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @return
+     * get an element of queue with delete
+     * @return an element from queue
      */
     @Override
     public T poll() {
@@ -571,9 +572,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @param e
-     * @return
+     * add an element to stack
+     * @param e element to add
+     * @return if the element is successfully added
      */
     @Override
     public boolean push(T e) {
@@ -581,8 +582,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     *
-     * @return
+     * get an element from stack
+     * @return an element
      */
     @Override
     public T pop() {
