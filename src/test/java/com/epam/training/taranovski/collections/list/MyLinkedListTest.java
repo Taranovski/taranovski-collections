@@ -375,13 +375,18 @@ public class MyLinkedListTest {
     @Test
     public void testIndexOf() {
         System.out.println("indexOf");
-        Object o = null;
-        MyLinkedList instance = new MyLinkedList();
-        int expResult = 0;
+        String o = "null123";
+        MyLinkedList<String> instance = new MyLinkedList();
+        int expResult = 2;
+        instance.add("123");
+        instance.add("blahblahblah");
+        instance.add(o);
+        instance.add("12adfgsdf3");
+                
         int result = instance.indexOf(o);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(instance.indexOf("myblah") == -1);
+        
     }
 
     /**
@@ -425,13 +430,22 @@ public class MyLinkedListTest {
     @Test
     public void testOffer() {
         System.out.println("offer");
-        Object e = null;
-        MyLinkedList instance = new MyLinkedList();
-        boolean expResult = false;
+        Integer e = 1;
+        MyLinkedList<Integer> instance = new MyLinkedList();
         boolean result = instance.offer(e);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(result);
+        assertTrue(instance.getFirst() == e);
+        assertTrue(instance.getLast() == e);
+        Integer e1 = 2;
+        result = instance.offer(e1);
+        assertTrue(result);
+        assertTrue(instance.getFirst() == e);
+        assertTrue(instance.getLast() == e1);
+        Integer e2 = 3;
+        result = instance.offer(e2);
+        assertTrue(result);
+        assertTrue(instance.getFirst() == e);
+        assertTrue(instance.getLast() == e2);
     }
 
     /**
