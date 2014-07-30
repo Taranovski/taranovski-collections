@@ -176,12 +176,35 @@ public class MyLinkedListTest {
     @Test
     public void testDescendingIterator() {
         System.out.println("descendingIterator");
-        MyLinkedList instance = new MyLinkedList();
-        Iterator expResult = null;
-        Iterator result = instance.descendingIterator();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        MyLinkedList<String> instance = new MyLinkedList();
+        String[] array1 = {"1", "22", "333", "4444"};
+        String[] array2 = {"4444", "333", "22", "1"};
+        instance.addAll(array1);
+        assertTrue(instance.size() == 4);
+
+        Iterator iterator = instance.descendingIterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+            assertTrue(iterator.next() == array2[i]);
+            i++;
+        }
+
+        iterator = instance.descendingIterator();
+        i = 0;
+        while (iterator.hasNext()) {
+            assertTrue(iterator.next() == array2[i]);
+            i++;
+        }
+
+        iterator = instance.descendingIterator();
+        i = 4;
+        while (iterator.hasNext()) {
+            assertTrue(instance.size() == i);
+            iterator.remove();
+            i--;
+        }
+        assertTrue(instance.isEmpty());
+
     }
 
     /**
@@ -190,12 +213,34 @@ public class MyLinkedListTest {
     @Test
     public void testIterator() {
         System.out.println("iterator");
-        MyLinkedList instance = new MyLinkedList();
-        Iterator expResult = null;
-        Iterator result = instance.iterator();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        MyLinkedList<String> instance = new MyLinkedList();
+        String[] array1 = {"1", "22", "333", "4444"};
+        String[] array2 = array1;
+        instance.addAll(array1);
+        assertTrue(instance.size() == 4);
+
+        Iterator iterator = instance.iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+            assertTrue(iterator.next() == array2[i]);
+            i++;
+        }
+
+        iterator = instance.iterator();
+        i = 0;
+        while (iterator.hasNext()) {
+            assertTrue(iterator.next() == array2[i]);
+            i++;
+        }
+
+        iterator = instance.iterator();
+        i = 4;
+        while (iterator.hasNext()) {
+            assertTrue(instance.size() == i);
+            iterator.remove();
+            i--;
+        }
+        assertTrue(instance.isEmpty());
     }
 
     /**
@@ -240,13 +285,17 @@ public class MyLinkedListTest {
     @Test
     public void testAddAll_GenericType() {
         System.out.println("addAll");
-        Object[] c = null;
-        MyLinkedList instance = new MyLinkedList();
-        boolean expResult = false;
-        boolean result = instance.addAll(c);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        MyLinkedList<String> instance = new MyLinkedList();
+        String[] expResult = {"111", "2222", "sdafasdf"};
+
+        instance.add("blah");
+
+        boolean result = instance.addAll(expResult);
+        assertTrue(result);
+        assertTrue(instance.get(1) == "111");
+        assertTrue(instance.get(2) == "2222");
+        assertTrue(instance.get(3) == "sdafasdf");
+
     }
 
     /**
@@ -255,14 +304,21 @@ public class MyLinkedListTest {
     @Test
     public void testAddAll_int_GenericType() {
         System.out.println("addAll");
-        int index = 0;
-        Object[] c = null;
-        MyLinkedList instance = new MyLinkedList();
-        boolean expResult = false;
-        boolean result = instance.addAll(index, c);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        MyLinkedList<String> instance = new MyLinkedList();
+        String[] expResult = {"111", "2222", "sdafasdf"};
+
+        instance.add("blah1");
+        instance.add("blah2");
+        instance.add("blah3");
+        instance.add("blah4");
+
+        boolean result = instance.addAll(2, expResult);
+        assertTrue(result);
+        assertTrue(instance.get(2) == "111");
+        assertTrue(instance.get(3) == "2222");
+        assertTrue(instance.get(4) == "sdafasdf");
+        assertTrue(instance.get(0) == instance.getFirst());
+        assertTrue(instance.get(6) == instance.getLast());
     }
 
     /**
@@ -292,18 +348,18 @@ public class MyLinkedListTest {
         instance.add("111");
         instance.add(expResult);
         instance.add("122");
-        
+
         assertTrue(instance.getFirst() == "111");
-        assertTrue(instance.getLast()== "122");
+        assertTrue(instance.getLast() == "122");
         assertTrue(instance.size() == 3);
-        
+
         String result = instance.remove(index);
         assertTrue(expResult == result);
-        
+
         assertTrue(instance.getFirst() == "111");
-        assertTrue(instance.getLast()== "122");
+        assertTrue(instance.getLast() == "122");
         assertTrue(instance.size() == 2);
-        
+
     }
 
     /**
@@ -316,9 +372,9 @@ public class MyLinkedListTest {
         Object reference = new Object();
         Object reference1 = new Object();
         Object reference2 = new Object();
-        
+
         assertTrue(instance.isEmpty());
-        
+
         instance.add(reference);
         instance.add(reference1);
         instance.add(reference2);
@@ -326,7 +382,7 @@ public class MyLinkedListTest {
         assertTrue(instance.size() == 3);
         instance.clear();
         assertTrue(instance.isEmpty());
-        
+
     }
 
     /**
@@ -382,11 +438,11 @@ public class MyLinkedListTest {
         instance.add("blahblahblah");
         instance.add(o);
         instance.add("12adfgsdf3");
-                
+
         int result = instance.indexOf(o);
         assertEquals(expResult, result);
         assertTrue(instance.indexOf("myblah") == -1);
-        
+
     }
 
     /**
@@ -417,11 +473,11 @@ public class MyLinkedListTest {
         MyLinkedList<String> instance = new MyLinkedList();
         String[] expResult = {"111", "2222", "sdafasdf"};
         instance.addAll(expResult);
-        
+
         String[] result = instance.toArray();
-        
+
         assertArrayEquals(expResult, result);
-        
+
     }
 
     /**
@@ -454,12 +510,16 @@ public class MyLinkedListTest {
     @Test
     public void testPeek() {
         System.out.println("peek");
-        MyLinkedList instance = new MyLinkedList();
-        Object expResult = null;
-        Object result = instance.peek();
+        MyLinkedList<String> instance = new MyLinkedList();
+        String expResult = "peek1";
+
+        assertTrue(instance.isEmpty());
+        instance.add(expResult);
+        assertTrue(!instance.isEmpty());
+
+        String result = instance.peek();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -468,12 +528,17 @@ public class MyLinkedListTest {
     @Test
     public void testPoll() {
         System.out.println("poll");
-        MyLinkedList instance = new MyLinkedList();
-        Object expResult = null;
-        Object result = instance.poll();
+        MyLinkedList<String> instance = new MyLinkedList();
+        String expResult = "null1132123";
+
+        instance.add(expResult);
+        instance.add("blah");
+        assertTrue(instance.size() == 2);
+
+        String result = instance.poll();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(instance.size() == 1);
+        assertTrue(instance.getFirst() == "blah");
     }
 
     /**
@@ -482,13 +547,22 @@ public class MyLinkedListTest {
     @Test
     public void testPush() {
         System.out.println("push");
-        Object e = null;
-        MyLinkedList instance = new MyLinkedList();
-        boolean expResult = false;
+        Integer e = 1;
+        MyLinkedList<Integer> instance = new MyLinkedList();
+
+        assertTrue(instance.isEmpty());
         boolean result = instance.push(e);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(result);
+        assertTrue(!instance.isEmpty());
+        assertTrue(instance.getFirst() == e);
+        assertTrue(instance.getLast() == e);
+        Integer e1 = 2;
+
+        result = instance.push(e1);
+        assertTrue(result);
+        assertTrue(instance.getFirst() == e);
+        assertTrue(instance.getLast() == e1);
+
     }
 
     /**
@@ -497,12 +571,182 @@ public class MyLinkedListTest {
     @Test
     public void testPop() {
         System.out.println("pop");
-        MyLinkedList instance = new MyLinkedList();
-        Object expResult = null;
-        Object result = instance.pop();
+        MyLinkedList<String> instance = new MyLinkedList();
+        String expResult = "null1";
+
+        assertTrue(instance.isEmpty());
+        instance.add(expResult);
+        assertTrue(!instance.isEmpty());
+
+        String result = instance.pop();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(instance.isEmpty());
+
     }
 
+    /**
+     * Test of set method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testSet1() {
+        System.out.println("set");
+        int index = 0;
+        Object e = "nuldfsdfl";
+        MyLinkedList instance = new MyLinkedList();
+
+        boolean result = instance.set(index, e);
+        assertTrue(result);
+
+    }
+
+    /**
+     * Test of getFirst method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testGetFirst1() {
+        System.out.println("getFirst");
+        MyLinkedList instance = new MyLinkedList();
+        Object result = instance.getFirst();
+
+    }
+
+    /**
+     * Test of remove method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testRemove1() {
+        System.out.println("remove");
+        int index = 0;
+        MyLinkedList instance = new MyLinkedList();
+        Object result = instance.remove(index);
+
+    }
+
+    /**
+     * Test of getLast method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testGetLast1() {
+        System.out.println("getLast");
+        MyLinkedList instance = new MyLinkedList();
+        Object result = instance.getLast();
+
+    }
+
+    /**
+     * Test of peek method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testPeek1() {
+        System.out.println("peek");
+        MyLinkedList instance = new MyLinkedList();
+        Object result = instance.peek();
+
+    }
+
+    /**
+     * Test of toArray method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testToArray1() {
+        System.out.println("toArray");
+        MyLinkedList instance = new MyLinkedList();
+        Object[] result = instance.toArray();
+
+    }
+
+    /**
+     * Test of poll method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testPoll1() {
+        System.out.println("poll");
+        MyLinkedList instance = new MyLinkedList();
+        Object result = instance.poll();
+
+    }
+
+    /**
+     * Test of get method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testGet1() {
+        System.out.println("get");
+        int index = 0;
+        MyLinkedList instance = new MyLinkedList();
+        Object result = instance.get(index);
+
+    }
+
+    /**
+     * Test of removeFirst method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testRemoveFirst1() {
+        System.out.println("removeFirst");
+        MyLinkedList instance = new MyLinkedList();
+        Object result = instance.removeFirst();
+
+    }
+
+    /**
+     * Test of removeLast method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testRemoveLast1() {
+        System.out.println("removeLast");
+        MyLinkedList instance = new MyLinkedList();
+        Object result = instance.removeLast();
+
+    }
+
+    /**
+     * Test of add method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testAdd_int_GenericType1() {
+        System.out.println("add");
+        int index = 0;
+        Object c = null;
+        MyLinkedList instance = new MyLinkedList();
+        boolean result = instance.add(index, c);
+
+    }
+
+    /**
+     * Test of addAll method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testAddAll_GenericType1() {
+        System.out.println("addAll");
+        Object[] c = null;
+        MyLinkedList instance = new MyLinkedList();
+        boolean result = instance.addAll(c);
+
+    }
+
+    /**
+     * Test of addAll method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testAddAll_int_GenericType1() {
+        System.out.println("addAll");
+        int index = 0;
+        Object[] c = null;
+        MyLinkedList instance = new MyLinkedList();
+        boolean expResult = false;
+        boolean result = instance.addAll(index, c);
+        
+    }
+
+    /**
+     * Test of pop method, of class MyLinkedList.
+     */
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testPop1() {
+        System.out.println("pop");
+        MyLinkedList instance = new MyLinkedList();
+        Object result = instance.pop();
+
+    }
 }

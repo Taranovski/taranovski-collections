@@ -20,12 +20,14 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
     /**
      * node class
+     *
      * @param <T>
      */
     private static class MyNode<T> {
 
         /**
          * constructor
+         *
          * @param value
          * @param next
          * @param previous
@@ -100,6 +102,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
     /**
      * constructor from another my list
+     *
      * @param c a list of values to create from
      */
     public MyLinkedList(MyList<T> c) {
@@ -110,6 +113,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
     /**
      * adds an element to the start of the list
+     *
      * @param e item to add
      */
     public void addFirst(T e) {
@@ -129,6 +133,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
     /**
      * adds an element to the end of the list
+     *
      * @param e item to add
      */
     public void addLast(T e) {
@@ -171,7 +176,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public T removeFirst() {
@@ -258,8 +263,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
                     } else {
                         start = start.getNext();
                         start.setPrevious(null);
-                        currentMyNode = null;
                     }
+                    currentMyNode = null;
                 } else if (currentMyNode == end) {
                     end = end.getPrevious();
                     end.setNext(null);
@@ -318,19 +323,19 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
                 if (currentMyNode == null) {
                     throw new MyIndexOutOfBoundsException();
                 }
-                if (currentMyNode == start) {
+                if (currentMyNode == end) {
                     if (start == end) {
                         start = null;
                         end = null;
                     } else {
-                        start = start.getNext();
-                        start.setPrevious(null);
-                        currentMyNode = start;
+                        end = end.getPrevious();
+                        end.setNext(null);
                     }
-                } else if (currentMyNode == end) {
-                    end = end.getPrevious();
-                    end.setNext(null);
                     currentMyNode = null;
+                } else if (currentMyNode == start) {
+                    start = start.getNext();
+                    start.setPrevious(null);
+                    currentMyNode = start;
                 } else {
                     MyNode prevMyNode = currentMyNode.getPrevious();
                     MyNode nextMyNode = currentMyNode.getNext();
@@ -362,7 +367,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public boolean add(int index, T e) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index > size || size == 0) {
             throw new MyIndexOutOfBoundsException();
         }
         MyNode<T> node;
@@ -384,6 +389,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public boolean addAll(T[] c) {
+        if (c == null) {
+            throw new MyIndexOutOfBoundsException();
+        }
         boolean success = true;
         for (T item : c) {
             success = success & this.add(item);
@@ -399,7 +407,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public boolean addAll(int index, T[] c) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index > size || size == 0) {
             throw new MyIndexOutOfBoundsException();
         }
         boolean success = true;
@@ -410,12 +418,12 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
         }
         MyNode<T> prev = node.getPrevious();
         MyNode<T> tempEnd = end;
-        
+
         end = prev;
         this.addAll(c);
         end.setNext(node);
         end = tempEnd;
-        
+
         return success;
     }
 
@@ -426,7 +434,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public T get(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index > size || size == 0) {
             throw new MyIndexOutOfBoundsException();
         }
         MyNode<T> node;
@@ -444,7 +452,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index > size || size == 0) {
             throw new MyIndexOutOfBoundsException();
         }
         MyNode<T> node;
@@ -472,6 +480,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
     /**
      * checks if the list is empty
+     *
      * @return if the list is empty
      */
     @Override
@@ -487,7 +496,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public boolean set(int index, T e) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index > size || size == 0) {
             throw new MyIndexOutOfBoundsException();
         }
         MyNode<T> node;
@@ -501,6 +510,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
     /**
      * get an index of an item
+     *
      * @param o item to find
      * @return index of a given item in the list or -1 if no item found
      */
@@ -518,6 +528,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
     /**
      * gets a size of the list
+     *
      * @return size of the list
      */
     @Override
@@ -527,6 +538,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
     /**
      * presents a list as an array
+     *
      * @return an array which consists of all the elements of the list
      */
     @Override
@@ -545,6 +557,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
 
     /**
      * adds an item to the end of the queue (end of the list)
+     *
      * @param e item to add
      * @return if the item successfully added
      */
@@ -554,7 +567,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     * get an element of queue without delete
+     * get an element of queue without delete (start of the list)
+     *
      * @return an element from queue
      */
     @Override
@@ -563,7 +577,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     * get an element of queue with delete
+     * get an element of queue with delete (start of the list)
+     *
      * @return an element from queue
      */
     @Override
@@ -572,7 +587,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     * add an element to stack
+     * add an element to stack (end of the list)
+     *
      * @param e element to add
      * @return if the element is successfully added
      */
@@ -582,7 +598,8 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     }
 
     /**
-     * get an element from stack
+     * get an element from stack (end of the list)
+     *
      * @return an element
      */
     @Override
