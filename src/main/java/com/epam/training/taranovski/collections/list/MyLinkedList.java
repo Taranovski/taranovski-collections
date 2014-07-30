@@ -5,6 +5,7 @@
  */
 package com.epam.training.taranovski.collections.list;
 
+import com.epam.training.taranovski.collections.exceptions.MyIndexOutOfBoundsException;
 import com.epam.training.taranovski.collections.interfaces.MyList;
 import com.epam.training.taranovski.collections.interfaces.MyQueue;
 import com.epam.training.taranovski.collections.interfaces.MyStack;
@@ -34,9 +35,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
             this.next = next;
             this.previous = previous;
         }
-
+        
         private T value;
-
+        
         private MyNode<T> next;
         private MyNode<T> previous;
 
@@ -81,9 +82,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
         public void setPrevious(MyNode<T> previous) {
             this.previous = previous;
         }
-
+        
     }
-
+    
     private int size;
     private MyNode<T> start;
     private MyNode<T> end;
@@ -102,7 +103,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @param c
      */
     public MyLinkedList(MyList<T> c) {
-
+        for (T item : c) {
+            this.addLast(item);
+        }
     }
 
     /**
@@ -110,6 +113,19 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @param e
      */
     public void addFirst(T e) {
+        if (start == null) {
+            start = new MyNode<>(e, null, null);
+            end = start;
+        }
+        if (start == end) {
+            start = new MyNode<>(e, end, null);
+            end.setPrevious(start);
+        } else {
+            MyNode<T> temp = start;
+            start = new MyNode<>(e, temp, null);
+            temp.setPrevious(start);
+        }
+        size++;
     }
 
     /**
@@ -117,6 +133,19 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @param e
      */
     public void addLast(T e) {
+        if (end == null) {
+            end = new MyNode<>(e, null, null);
+            start = end;
+        }
+        if (end == start) {
+            end = new MyNode<>(e, null, start);
+            start.setNext(end);
+        } else {
+            MyNode<T> temp = end;
+            end = new MyNode<>(e, null, temp);
+            temp.setNext(end);
+        }
+        size++;
     }
 
     /**
@@ -125,7 +154,10 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     public T getFirst() {
-        return start == null ? null : start.getValue();
+        if (start == null) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        return start.getValue();
     }
 
     /**
@@ -134,7 +166,10 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     public T getLast() {
-        return end == null ? null : end.getValue();
+        if (end == null) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        return end.getValue();
     }
 
     /**
@@ -142,7 +177,18 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     public T removeFirst() {
-        return null;
+        if (start == null) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        T item = start.getValue();
+        if (start == end) {
+            start = null;
+            end = null;
+        } else {
+            start = start.getNext();
+            start.setPrevious(null);
+        }
+        return item;
     }
 
     /**
@@ -150,7 +196,10 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     public T removeLast() {
-        return null;
+        if (end == null) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        
     }
 
     /**
@@ -159,7 +208,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     public Iterator<T> descendingIterator() {
         return new Iterator<T>() {
-
+            
             MyNode<T> currentMyNode = end;
 
             /**
@@ -178,6 +227,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
              */
             @Override
             public T next() {
+                if (currentMyNode == null) {
+                    throw new MyIndexOutOfBoundsException();
+                }
                 T value = currentMyNode.getValue();
                 currentMyNode = currentMyNode.getPrevious();
                 return value;
@@ -188,13 +240,24 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
              */
             @Override
             public void remove() {
-                MyNode prevMyNode = currentMyNode.getPrevious();
-                MyNode nextMyNode = currentMyNode.getNext();
-                prevMyNode.setNext(nextMyNode);
-                nextMyNode.setPrevious(prevMyNode);
-                currentMyNode = prevMyNode;
+                if (currentMyNode == null) {
+                    throw new MyIndexOutOfBoundsException();
+                }
+                if (currentMyNode == start) {
+                    
+                }
+                if (currentMyNode == end) {
+                    
+                } else {
+                    MyNode prevMyNode = currentMyNode.getPrevious();
+                    MyNode nextMyNode = currentMyNode.getNext();
+                    prevMyNode.setNext(nextMyNode);
+                    nextMyNode.setPrevious(prevMyNode);
+                    currentMyNode = prevMyNode;
+                }
+                size--;
             }
-
+            
         };
     }
 
@@ -371,5 +434,5 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     public T pop() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
 }

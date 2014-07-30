@@ -11,6 +11,9 @@ package com.epam.training.taranovski.collections.exceptions;
  */
 public class MyIndexOutOfBoundsException extends RuntimeException {
 
+    /**
+     *
+     */
     public MyIndexOutOfBoundsException() {
         super("my index out of bounds");
     }
