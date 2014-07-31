@@ -66,7 +66,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     public void ensureCapacity(int minCapacity) {
         if (capacity < minCapacity) {
-            capacity = minCapacity;
+            capacity = (int) (minCapacity + minCapacity * CAPACITY_INCREASE_FACTOR);
             Object[] temp = array;
             array = new Object[capacity];
 
@@ -75,7 +75,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
     }
 
     /**
-     *
+     * sets a real size of a list to its size
      */
     public void trimToSize() {
         if (capacity > size) {
@@ -90,6 +90,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
 
     /**
      * add an element to list
+     *
      * @param e element to add
      * @return if add operation was successfull
      */
@@ -108,17 +109,30 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
     }
 
     /**
+     * add an element to the list to a given position
      *
-     * @param index
-     * @param e
-     * @return
+     * @param index position to add to
+     * @param e item
+     * @return if an add operation is successfull
      */
     @Override
     public boolean add(int index, T e) {
         if (index < 0 || index > size || size == 0) {
             throw new MyIndexOutOfBoundsException();
         }
-        
+        if (size < capacity) {
+            System.arraycopy(array, index, array, index + 1, size - index);
+        } else {
+            capacity = (int) (size + size * CAPACITY_INCREASE_FACTOR);
+            Object[] temp = array;
+            array = new Object[capacity];
+
+            System.arraycopy(temp, 0, array, 0, index);
+            System.arraycopy(temp, index, array, index + 1, temp.length - index);
+        }
+        array[index] = e;
+        size++;
+        return array[index] == e;
     }
 
     /**
@@ -128,7 +142,19 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public boolean addAll(T[] c) {
-        
+        if ((size + c.length) >= capacity) {
+            this.ensureCapacity(size + c.length);
+        }
+        System.arraycopy(c, 0, array, size, c.length);
+        int tempsize = size;
+        size += c.length;
+        boolean success = true;
+
+        for (int i = 0; i < c.length; i++) {
+            success = success & c[i] == array[i + tempsize];
+        }
+
+        return success;
     }
 
     /**
@@ -139,11 +165,12 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public boolean addAll(int index, T[] c) {
-        
+
     }
 
     /**
      * get an item by index
+     *
      * @param index index if item to get
      * @return item
      */
@@ -157,6 +184,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
 
     /**
      * remove item from list
+     *
      * @param index index of item to remove
      * @return item
      */
@@ -165,7 +193,11 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
         if (index < 0 || index > size || size == 0) {
             throw new MyIndexOutOfBoundsException();
         }
-        
+        T e = (T) array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+
+        size--;
+        return e;
     }
 
     /**
@@ -179,6 +211,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
 
     /**
      * check if the list is empty
+     *
      * @return if the list is empty
      */
     @Override
@@ -202,17 +235,26 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
     }
 
     /**
+     * get an index of an item
      *
-     * @param o
-     * @return
+     * @param o item to find
+     * @return index of a given item in the list or -1 if no item found
      */
     @Override
     public int indexOf(T o) {
-        
+        int index = 0;
+        for (T item : this) {
+            if (item.equals(o)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 
     /**
      * size of the list
+     *
      * @return list size
      */
     @Override
@@ -221,8 +263,9 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
     }
 
     /**
+     * presents a list as an array
      *
-     * @return
+     * @return an array which consists of all the elements of the list
      */
     @Override
     public T[] toArray() {
@@ -238,23 +281,35 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>(){
+        return new Iterator<T>() {
+            int i = 0;
 
+            /**
+             *
+             * @return
+             */
             @Override
             public boolean hasNext() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return i < size;
             }
 
+            /**
+             *
+             * @return
+             */
             @Override
             public T next() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return (T) array[i++];
             }
 
+            /**
+             *
+             */
             @Override
             public void remove() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                System.arraycopy(array, i + 1, array, i, size - i);
             }
-            
+
         };
     }
 
