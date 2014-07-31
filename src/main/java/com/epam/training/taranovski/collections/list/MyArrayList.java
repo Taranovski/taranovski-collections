@@ -48,7 +48,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
     }
 
     /**
-     * constructor with initian capacity
+     * constructor with initial capacity
      *
      * @param initialCapacity initial capacity
      */
@@ -92,7 +92,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      * add an element to list
      *
      * @param e element to add
-     * @return if add operation was successfull
+     * @return if add operation have succeed
      */
     @Override
     public boolean add(T e) {
@@ -113,7 +113,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      *
      * @param index position to add to
      * @param e item
-     * @return if an add operation is successfull
+     * @return if an add operation have succeed
      */
     @Override
     public boolean add(int index, T e) {
@@ -142,9 +142,13 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public boolean addAll(T[] c) {
+        if (c == null) {
+            throw new MyIndexOutOfBoundsException();
+        }
         if ((size + c.length) >= capacity) {
             this.ensureCapacity(size + c.length);
         }
+
         System.arraycopy(c, 0, array, size, c.length);
         int tempsize = size;
         size += c.length;
@@ -165,7 +169,24 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public boolean addAll(int index, T[] c) {
+        if (c == null) {
+            throw new MyIndexOutOfBoundsException();
+        }
+        if ((size + c.length) >= capacity) {
+            this.ensureCapacity(size + c.length);
+        }
 
+        System.arraycopy(array, index, array, index + c.length, size - index);
+        System.arraycopy(c, 0, array, index, c.length);
+        int tempsize = index;
+        size += c.length;
+        boolean success = true;
+
+        for (int i = 0; i < c.length; i++) {
+            success = success & c[i] == array[i + tempsize];
+        }
+
+        return success;
     }
 
     /**
@@ -272,7 +293,14 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
         if (size == 0) {
             throw new MyIndexOutOfBoundsException();
         }
-        return (T[]) Arrays.copyOf(array, size);
+
+        T[] newArray = (T[]) java.lang.reflect.Array.newInstance(array[0].getClass(), size);
+
+        T item = null;
+        for (int i = 0; i < size; i++) {
+            newArray[i] = (T) array[i];
+        }
+        return newArray;
     }
 
     /**
@@ -308,6 +336,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
             @Override
             public void remove() {
                 System.arraycopy(array, i + 1, array, i, size - i);
+                size--;
             }
 
         };

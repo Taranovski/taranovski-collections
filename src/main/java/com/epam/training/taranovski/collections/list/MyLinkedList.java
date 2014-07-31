@@ -410,6 +410,9 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
         if (index < 0 || index > size || size == 0) {
             throw new MyIndexOutOfBoundsException();
         }
+        if (c == null) {
+            throw new MyIndexOutOfBoundsException();
+        }
         boolean success = true;
         MyNode<T> node;
         int i = 0;
