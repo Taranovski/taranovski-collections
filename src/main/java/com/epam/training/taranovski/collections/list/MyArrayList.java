@@ -6,6 +6,7 @@
 package com.epam.training.taranovski.collections.list;
 
 import com.epam.training.taranovski.collections.exceptions.MyIndexOutOfBoundsException;
+import com.epam.training.taranovski.collections.exceptions.MyInvalidArgumentException;
 import com.epam.training.taranovski.collections.interfaces.MyList;
 import com.epam.training.taranovski.collections.interfaces.MyRandomAccess;
 import java.util.Arrays;
@@ -143,7 +144,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
     @Override
     public boolean addAll(T[] c) {
         if (c == null) {
-            throw new MyIndexOutOfBoundsException();
+            throw new MyInvalidArgumentException();
         }
         if ((size + c.length) >= capacity) {
             this.ensureCapacity(size + c.length);
@@ -170,7 +171,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
     @Override
     public boolean addAll(int index, T[] c) {
         if (c == null) {
-            throw new MyIndexOutOfBoundsException();
+            throw new MyInvalidArgumentException();
         }
         if ((size + c.length) >= capacity) {
             this.ensureCapacity(size + c.length);

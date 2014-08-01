@@ -16,15 +16,17 @@ import java.util.Iterator;
  */
 public class MyHashMap<K, V> implements MyMap<K, V> {
 
-    public MyHashMap();
-    public MyHashMap(int initialCapacity);
-    public MyHashMap(int initialCapacity, float loadFactor);
-    
-    
-    
-    
-    
-    
+    private int size;
+
+    public MyHashMap() {
+    }
+
+    public MyHashMap(int initialCapacity) {
+    }
+
+    public MyHashMap(int initialCapacity, float loadFactor) {
+    }
+
     @Override
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -45,9 +47,13 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return size == 0;
     }
 
     @Override
@@ -60,9 +66,13 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return size;
     }
 
     @Override

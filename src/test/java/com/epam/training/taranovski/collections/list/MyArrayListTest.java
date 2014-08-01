@@ -6,6 +6,7 @@
 package com.epam.training.taranovski.collections.list;
 
 import com.epam.training.taranovski.collections.exceptions.MyIndexOutOfBoundsException;
+import com.epam.training.taranovski.collections.exceptions.MyInvalidArgumentException;
 import java.util.Iterator;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -397,7 +398,7 @@ public class MyArrayListTest {
     /**
      * Test of addAll method, of class MyArrayList.
      */
-    @Test(expected = MyIndexOutOfBoundsException.class)
+    @Test(expected = MyInvalidArgumentException.class)
     public void testAddAll_GenericType1() {
         System.out.println("addAll");
         Object[] c = null;
@@ -409,7 +410,7 @@ public class MyArrayListTest {
     /**
      * Test of addAll method, of class MyArrayList.
      */
-    @Test(expected = MyIndexOutOfBoundsException.class)
+    @Test(expected = MyInvalidArgumentException.class)
     public void testAddAll_int_GenericType1() {
         System.out.println("addAll");
         int index = 0;
@@ -417,6 +418,37 @@ public class MyArrayListTest {
         MyArrayList instance = new MyArrayList();
         boolean expResult = false;
         boolean result = instance.addAll(index, c);
+
+    }
+
+    @Test
+    public void testAddMuch() {
+        System.out.println("addMuch");
+        Integer[] array = new Integer[32];
+        for (int i = 0; i < 32; i++) {
+            array[i] = i;
+        }
+        MyArrayList<Integer> instance = new MyArrayList();
+        for (Integer i : array) {
+            instance.add(i);
+        }
+        assertTrue(instance.size() == 32);
+        for (Integer i : array) {
+            assertTrue(instance.get(i) == i);
+        }
+
+        Iterator<Integer> iterator = instance.iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+            assertTrue(iterator.next() == i);
+            i++;
+        }
+
+        iterator = instance.iterator();
+        while (iterator.hasNext()) {
+            iterator.remove();
+        }
+        assertTrue(instance.isEmpty());
 
     }
 

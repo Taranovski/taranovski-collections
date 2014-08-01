@@ -6,6 +6,7 @@
 package com.epam.training.taranovski.collections.list;
 
 import com.epam.training.taranovski.collections.exceptions.MyIndexOutOfBoundsException;
+import com.epam.training.taranovski.collections.exceptions.MyInvalidArgumentException;
 import java.util.Iterator;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -716,7 +717,7 @@ public class MyLinkedListTest {
     /**
      * Test of addAll method, of class MyLinkedList.
      */
-    @Test(expected = MyIndexOutOfBoundsException.class)
+    @Test(expected = MyInvalidArgumentException.class)
     public void testAddAll_GenericType1() {
         System.out.println("addAll");
         Object[] c = null;
@@ -728,7 +729,7 @@ public class MyLinkedListTest {
     /**
      * Test of addAll method, of class MyLinkedList.
      */
-    @Test(expected = MyIndexOutOfBoundsException.class)
+    @Test(expected = MyInvalidArgumentException.class)
     public void testAddAll_int_GenericType1() {
         System.out.println("addAll");
         int index = 0;

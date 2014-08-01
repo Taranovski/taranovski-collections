@@ -17,11 +17,14 @@ import java.util.Iterator;
  */
 public class MyTreeMap<K, V> implements MyMap<K, V> {
 
-    MyTreeMap();
-    MyTreeMap(Comparator<K> comparator);
-    
-    
-    
+    private int size;
+
+    MyTreeMap() {
+    }
+
+    MyTreeMap(Comparator<K> comparator) {
+    }
+
     @Override
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -42,9 +45,13 @@ public class MyTreeMap<K, V> implements MyMap<K, V> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return size == 0;
     }
 
     @Override
@@ -57,9 +64,13 @@ public class MyTreeMap<K, V> implements MyMap<K, V> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return size;
     }
 
     @Override
