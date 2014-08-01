@@ -17,14 +17,14 @@ import java.util.Comparator;
 public class MyCollections {
 
     public static void sort(MyList list) {
-        if (list == null) {
+        if (list == null || list.isEmpty() || !(list.get(0) instanceof Comparable)) {
             throw new MyInvalidArgumentException();
         }
 
     }
 
     public static void sort(MyList list, Comparator c) {
-        if (list == null || c == null) {
+        if (list == null || list.isEmpty() || c == null) {
             throw new MyInvalidArgumentException();
         }
 
@@ -54,6 +54,7 @@ public class MyCollections {
         if (dest == null || src == null) {
             throw new MyInvalidArgumentException();
         }
+        dest.clear();
         dest.addAll(src.toArray());
     }
 
@@ -77,8 +78,47 @@ public class MyCollections {
         if (list == null) {
             throw new MyInvalidArgumentException();
         }
-        
+
         return 0;
+    }
+
+    private void quicksortComparable(MyList list, int low, int high) {
+        int i = low;
+        int j = high;
+        // Get the pivot element from the middle of the list
+        Object pivot = list.get(low + (high - low) / 2);
+
+        // Divide into two lists
+        while (i <= j) {
+            // If the current value from the left list is smaller then the pivot
+            // element then get the next element from the left list
+            while (((Comparable) list.get(i)).compareTo(pivot) < 0) {
+                i++;
+            }
+            // If the current value from the right list is larger then the pivot
+            // element then get the next element from the right list
+            while (((Comparable) list.get(j)).compareTo(pivot) > 0) {
+                j--;
+            }
+
+            // If we have found a values in the left list which is larger then
+            // the pivot element and if we have found a value in the right list
+            // which is smaller then the pivot element then we exchange the
+            // values.
+            // As we are done we can increase i and j
+            if (i <= j) {
+                swap(list, i, j);
+                i++;
+                j--;
+            }
+        }
+        // Recursion
+        if (low < j) {
+            quicksortComparable(list, low, j);
+        }
+        if (i < high) {
+            quicksortComparable(list, i, high);
+        }
     }
 
 }
