@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.epam.training.taranovski.collections.list;
+package com.epam.training.taranovski.collections;
 
 import com.epam.training.taranovski.collections.exceptions.MyIndexOutOfBoundsException;
-import com.epam.training.taranovski.collections.exceptions.MyInvalidArgumentException;
+import com.epam.training.taranovski.collections.exceptions.MyIllegalArgumentException;
+import com.epam.training.taranovski.collections.list.MyLinkedList;
 import java.util.Iterator;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -717,7 +718,7 @@ public class MyLinkedListTest {
     /**
      * Test of addAll method, of class MyLinkedList.
      */
-    @Test(expected = MyInvalidArgumentException.class)
+    @Test(expected = MyIllegalArgumentException.class)
     public void testAddAll_GenericType1() {
         System.out.println("addAll");
         Object[] c = null;
@@ -729,7 +730,7 @@ public class MyLinkedListTest {
     /**
      * Test of addAll method, of class MyLinkedList.
      */
-    @Test(expected = MyInvalidArgumentException.class)
+    @Test(expected = MyIllegalArgumentException.class)
     public void testAddAll_int_GenericType1() {
         System.out.println("addAll");
         int index = 0;

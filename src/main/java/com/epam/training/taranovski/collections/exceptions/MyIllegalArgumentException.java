@@ -9,12 +9,12 @@ package com.epam.training.taranovski.collections.exceptions;
  *
  * @author Oleksandr_Taranovsky
  */
-public class MyInvalidArgumentException extends RuntimeException {
+public class MyIllegalArgumentException extends RuntimeException {
 
     /**
      *
      */
-    public MyInvalidArgumentException() {
+    public MyIllegalArgumentException() {
         super("my invalid argument exception");
     }
 }

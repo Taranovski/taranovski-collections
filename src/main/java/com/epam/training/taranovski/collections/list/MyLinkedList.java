@@ -6,7 +6,7 @@
 package com.epam.training.taranovski.collections.list;
 
 import com.epam.training.taranovski.collections.exceptions.MyIndexOutOfBoundsException;
-import com.epam.training.taranovski.collections.exceptions.MyInvalidArgumentException;
+import com.epam.training.taranovski.collections.exceptions.MyIllegalArgumentException;
 import com.epam.training.taranovski.collections.interfaces.MyList;
 import com.epam.training.taranovski.collections.interfaces.MyQueue;
 import com.epam.training.taranovski.collections.interfaces.MyStack;
@@ -391,7 +391,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     @Override
     public boolean addAll(T[] c) {
         if (c == null) {
-            throw new MyInvalidArgumentException();
+            throw new MyIllegalArgumentException();
         }
         boolean success = true;
         for (T item : c) {
@@ -409,7 +409,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
     @Override
     public boolean addAll(int index, T[] c) {
         if (c == null) {
-            throw new MyInvalidArgumentException();
+            throw new MyIllegalArgumentException();
         }
         if (index < 0 || index > size || size == 0) {
             throw new MyIndexOutOfBoundsException();
