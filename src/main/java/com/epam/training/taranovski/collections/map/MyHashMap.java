@@ -17,6 +17,9 @@ import java.util.Iterator;
 public class MyHashMap<K, V> implements MyMap<K, V> {
 
     private int size;
+    private int bucketSize = 16;
+    private double fillRate = 0.75;
+    
 
     public MyHashMap() {
     }
