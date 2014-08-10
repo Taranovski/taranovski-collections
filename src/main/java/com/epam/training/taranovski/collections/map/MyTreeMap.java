@@ -19,10 +19,10 @@ import java.util.List;
  * @param <V>
  */
 public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
-    
+
     private static final boolean RED = true;
     private static final boolean BLACK = false;
-    
+
     private int size;
     private MyTreeMapEntry<K, V> head;
     private Comparator<K> comparator;
@@ -31,7 +31,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      *
      */
     private class MyTreeMapEntry<K, V> implements MyEntry<K, V> {
-        
+
         private final K key;
         private V value;
         private boolean color;
@@ -134,7 +134,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
         public void setParent(MyTreeMapEntry<K, V> parent) {
             this.parent = parent;
         }
-        
+
     }
 
     /**
@@ -274,9 +274,9 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
             head.setColor(BLACK);
             return null;
         }
-        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public V remove(K key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -304,7 +304,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      *
      */
     private class MyTreeMapEntryIterator<K, V> implements Iterator<MyTreeMapEntry<K, V>> {
-        
+
         private MyHashMap map;
         private List<MyTreeMapEntry<K, V>> list = new LinkedList<>();
         private int index;
@@ -313,7 +313,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
          *
          */
         public MyTreeMapEntryIterator() {
-            
+
         }
 
         /**
@@ -343,5 +343,5 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
             map.remove(entry.getKey());
         }
     }
-    
+
 }
