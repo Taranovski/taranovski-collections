@@ -11,6 +11,7 @@ import com.epam.training.taranovski.collections.interfaces.MyList;
 import com.epam.training.taranovski.collections.interfaces.MyRandomAccess;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  *
@@ -19,8 +20,8 @@ import java.util.Iterator;
  */
 public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
 
-    private final int DEFAULT_CAPACITY = 16;
-    private final double CAPACITY_INCREASE_FACTOR = 0.5;
+    private static final int DEFAULT_CAPACITY = 16;
+    private static final double CAPACITY_INCREASE_FACTOR = 0.5;
     private int capacity;
     private int size;
     private Object[] array;
@@ -328,6 +329,9 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
              */
             @Override
             public T next() {
+                if (i >= size) {
+                    throw new NoSuchElementException();
+                }
                 return (T) array[i++];
             }
 

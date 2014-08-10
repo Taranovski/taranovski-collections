@@ -5,8 +5,12 @@
  */
 package com.epam.training.taranovski.collections.map;
 
+import com.epam.training.taranovski.collections.exceptions.MyNoSuchElementException;
 import com.epam.training.taranovski.collections.interfaces.MyMap;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -16,38 +20,194 @@ import java.util.Iterator;
  */
 public class MyHashMap<K, V> implements MyMap<K, V> {
 
+    private static final int DEFAULT_BUCKET_NUMBER = 16;
+    private static final int MAX_BUCKET_NUMBER = 1 << 30;
+    private static final double DEFAULT_CAPACITY_THRESHOLD = 0.75;
+    private static final int BUCKET_SHIFT_FACTOR = 1;
+    private static final int MAGIC_INT = 1117;
+    private static final int KEY_NOT_FOUND = -1;
+
     private int size;
-    private int bucketSize = 16;
-    private double fillRate = 0.75;
-    
+    private int bucketNumber;
+    private double loadFactor;
 
+    private List<List<MyHashMapEntry>> buckets;
+
+    /**
+     *
+     */
+    private class MyHashMapEntry implements MyEntry<K, V> {
+
+        private final K key;
+        private V value;
+
+        /**
+         *
+         * @param key
+         * @param value
+         */
+        public MyHashMapEntry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        /**
+         *
+         * @return
+         */
+        @Override
+        public K getKey() {
+            return key;
+        }
+
+        /**
+         *
+         * @return
+         */
+        @Override
+        public V getValue() {
+            return value;
+        }
+
+        /**
+         *
+         * @param value
+         * @return
+         */
+        @Override
+        public V setValue(V value) {
+            V tempValue = this.value;
+            this.value = value;
+            return tempValue;
+        }
+
+    }
+
+    /**
+     *
+     */
     public MyHashMap() {
+        bucketNumber = DEFAULT_BUCKET_NUMBER;
+        size = 0;
+        loadFactor = DEFAULT_CAPACITY_THRESHOLD;
+        buckets = new ArrayList<>(bucketNumber);
+        for (int i = 0; i < bucketNumber; i++) {
+            buckets.set(i, new LinkedList<MyHashMapEntry>());
+        }
+
     }
 
+    /**
+     *
+     * @param initialCapacity
+     */
     public MyHashMap(int initialCapacity) {
+        bucketNumber = DEFAULT_BUCKET_NUMBER;
+        for (; bucketNumber <= MAX_BUCKET_NUMBER;) {
+            if (initialCapacity < bucketNumber) {
+                break;
+            }
+            bucketNumber = bucketNumber << BUCKET_SHIFT_FACTOR;
+        }
+        size = 0;
+        loadFactor = DEFAULT_CAPACITY_THRESHOLD;
+
+        buckets = new ArrayList<>(bucketNumber);
+        for (int i = 0; i < bucketNumber; i++) {
+            buckets.set(i, new LinkedList<MyHashMapEntry>());
+        }
+
     }
 
-    public MyHashMap(int initialCapacity, float loadFactor) {
+    /**
+     *
+     * @param initialCapacity
+     * @param loadFactor
+     */
+    public MyHashMap(int initialCapacity, double loadFactor) {
+        this(initialCapacity);
+        this.loadFactor = loadFactor;
     }
 
+    /**
+     *
+     */
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (int i = 0; i < bucketNumber; i++) {
+            buckets.set(i, new LinkedList<MyHashMapEntry>());
+        }
+        size = 0;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
+    private int getBucket(K key) {
+        return (key.hashCode() * MAGIC_INT) % bucketNumber;
+    }
+
+    /**
+     *
+     * @param key
+     * @param bucket
+     * @return
+     */
+    private int getKeyIndexInTheBucket(K key, int bucket) {
+        List<MyHashMapEntry> someBucket = buckets.get(bucket);
+        int index = KEY_NOT_FOUND;
+        for (int i = 0; i < someBucket.size(); i++) {
+            if (key.equals(key)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+
+    /**
+     *
+     * @param key
+     * @return
+     */
     @Override
     public boolean containsKey(K key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getKeyIndexInTheBucket(key, getBucket(key)) != KEY_NOT_FOUND;
     }
 
+    /**
+     *
+     * @param value
+     * @return
+     */
     @Override
     public boolean containsValue(V value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Iterator<? extends MyEntry<K, V>> iterator = entryIterator();
+        while (iterator.hasNext()) {
+            if (value.equals(iterator.next().getValue())) {
+                return true;
+            }
+        }
+        return false;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int bucket = getBucket(key);
+        if (containsKey(key)) {
+            MyHashMapEntry item = buckets.get(bucket).get(getKeyIndexInTheBucket(key, bucket));
+            V value = item.getValue();
+            return value;
+        } else {
+            throw new MyNoSuchElementException();
+        }
     }
 
     /**
@@ -59,14 +219,65 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         return size == 0;
     }
 
-    @Override
-    public V put(K key, V value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    /**
+     *
+     */
+    private void ensureCapacity() {
+        double currentFillRate = size / bucketNumber;
+        if (currentFillRate > loadFactor & bucketNumber < MAX_BUCKET_NUMBER) {
+            Iterator<? extends MyEntry> iterator = this.entryIterator();
+
+            bucketNumber = bucketNumber << BUCKET_SHIFT_FACTOR;
+            buckets = new ArrayList<>(bucketNumber);
+            for (int i = 0; i < bucketNumber; i++) {
+                buckets.set(i, new LinkedList<MyHashMapEntry>());
+            }
+            size = 0;
+            MyEntry entry = null;
+            while (iterator.hasNext()) {
+                entry = iterator.next();
+                this.put((K) entry.getKey(), (V) entry.getValue());
+            }
+        }
     }
 
+    /**
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    @Override
+    public V put(K key, V value) {
+        ensureCapacity();
+        int bucket = getBucket(key);
+        if (containsKey(key)) {
+            MyHashMapEntry item = buckets.get(bucket).get(getKeyIndexInTheBucket(key, bucket));
+            V oldValue = item.setValue(value);
+            return oldValue;
+        } else {
+            buckets.get(bucket).add(new MyHashMapEntry(key, value));
+            size++;
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param key
+     * @return
+     */
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int bucket = getBucket(key);
+        if (containsKey(key)) {
+            MyHashMapEntry item = buckets.get(bucket).remove(getKeyIndexInTheBucket(key, bucket));
+            V value = item.getValue();
+            size--;
+            return value;
+        } else {
+            throw new MyNoSuchElementException();
+        }
     }
 
     /**
@@ -78,9 +289,62 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         return size;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public Iterator<MyEntry<K, V>> entryIterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Iterator<? extends MyEntry<K, V>> entryIterator() {
+        return new MyHashMapEntryIterator(this);
+    }
+
+    /**
+     *
+     */
+    private class MyHashMapEntryIterator implements Iterator<MyHashMapEntry> {
+
+        private MyHashMap map;
+        private List<MyHashMapEntry> list = new LinkedList<>();
+        private int index;
+
+        /**
+         *
+         */
+        public MyHashMapEntryIterator(MyHashMap map) {
+            this.map = map;
+            for (List tempList : buckets) {
+                list.addAll(tempList);
+            }
+            index = 0;
+        }
+
+        /**
+         *
+         * @return
+         */
+        @Override
+        public boolean hasNext() {
+            return index < size;
+        }
+
+        /**
+         *
+         * @return
+         */
+        @Override
+        public MyHashMapEntry next() {
+            return list.get(index++);
+        }
+
+        /**
+         *
+         */
+        @Override
+        public void remove() {
+            MyHashMapEntry entry = list.remove(index);
+            map.remove(entry.getKey());
+        }
+
     }
 
 }
