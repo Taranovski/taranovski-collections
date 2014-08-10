@@ -6,8 +6,6 @@
 
 package com.epam.training.taranovski.collections.map;
 
-import com.epam.training.taranovski.collections.interfaces.MyMap;
-import java.util.Iterator;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -60,9 +58,9 @@ public class MyTreeMapTest {
         System.out.println("containsKey");
         Object key = null;
         MyTreeMap instance = new MyTreeMap();
-        boolean expResult = false;
-        boolean result = instance.containsKey(key);
-        assertEquals(expResult, result);
+//        boolean expResult = false;
+//        boolean result = instance.containsKey(key);
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -75,9 +73,9 @@ public class MyTreeMapTest {
         System.out.println("containsValue");
         Object value = null;
         MyTreeMap instance = new MyTreeMap();
-        boolean expResult = false;
-        boolean result = instance.containsValue(value);
-        assertEquals(expResult, result);
+//        boolean expResult = false;
+//        boolean result = instance.containsValue(value);
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -90,10 +88,10 @@ public class MyTreeMapTest {
         System.out.println("get");
         Object key = null;
         MyTreeMap instance = new MyTreeMap();
-        Object expResult = null;
-        Object result = instance.get(key);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+//        Object expResult = null;
+//        Object result = instance.get(key);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -120,9 +118,9 @@ public class MyTreeMapTest {
         Object key = null;
         Object value = null;
         MyTreeMap instance = new MyTreeMap();
-        Object expResult = null;
-        Object result = instance.put(key, value);
-        assertEquals(expResult, result);
+//        Object expResult = null;
+//        Object result = instance.put(key, value);
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -135,9 +133,9 @@ public class MyTreeMapTest {
         System.out.println("remove");
         Object key = null;
         MyTreeMap instance = new MyTreeMap();
-        Object expResult = null;
-        Object result = instance.remove(key);
-        assertEquals(expResult, result);
+//        Object expResult = null;
+//        Object result = instance.remove(key);
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

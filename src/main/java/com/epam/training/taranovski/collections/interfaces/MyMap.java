@@ -35,15 +35,9 @@ public interface MyMap<K, V> {
 
     interface MyEntry<K, V> {
 
-        @Override
-        boolean equals(Object o);
-
         K getKey();
 
         V getValue();
-
-        @Override
-        int hashCode();
 
         V setValue(V value);
     }

@@ -344,7 +344,5 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
             MyHashMapEntry<K, V> entry = list.remove(index);
             map.remove(entry.getKey());
         }
-
     }
-
 }

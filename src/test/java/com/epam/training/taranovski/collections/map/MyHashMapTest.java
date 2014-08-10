@@ -6,8 +6,6 @@
 
 package com.epam.training.taranovski.collections.map;
 
-import com.epam.training.taranovski.collections.interfaces.MyMap;
-import java.util.Iterator;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
