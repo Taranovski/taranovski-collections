@@ -41,8 +41,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      * @param c a list of values to create from
      */
     public MyArrayList(MyList<T> c) {
-        size = c.size();
-        capacity = (int) (size + size * CAPACITY_INCREASE_FACTOR);
+        capacity = (int) (c.size() + c.size() * CAPACITY_INCREASE_FACTOR);
         array = new Object[capacity];
         for (T item : c) {
             this.add(item);
@@ -55,10 +54,12 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      * @param initialCapacity initial capacity
      */
     public MyArrayList(int initialCapacity) {
+        if (initialCapacity < 1) {
+            throw new MyIllegalArgumentException();
+        }
         capacity = initialCapacity;
         size = 0;
         array = new Object[capacity];
-
     }
 
     /**

@@ -366,26 +366,26 @@ public class MyCollectionsTest {
         Integer key = 27;
         int expResult = 27;
         int result = MyCollections.binarySearch(list, key);
-        
+
         assertEquals(expResult, result);
-        
+
         key = 32;
         expResult = -33;
         result = MyCollections.binarySearch(list, key);
         assertEquals(expResult, result);
-        
+
         key = -1;
         expResult = -1;
         result = MyCollections.binarySearch(list, key);
         assertEquals(expResult, result);
-        
+
         key = 15;
         expResult = 15;
         result = MyCollections.binarySearch(list, key);
         assertEquals(expResult, result);
-        
+
         list.remove(15);
-        
+
         key = 15;
         expResult = -16;
         result = MyCollections.binarySearch(list, key);
@@ -404,6 +404,27 @@ public class MyCollectionsTest {
         int expResult = 0;
         int result = MyCollections.binarySearch(list, key);
         assertEquals(expResult, result);
+    }
+
+    @Test(expected = MyIllegalArgumentException.class)
+    public void testSortNullList() {
+        MyList<Integer> list = null;
+        MyCollections.sort(list);
+
+    }
+
+    @Test(expected = MyIllegalArgumentException.class)
+    public void testSortEmptyList() {
+        MyList<Integer> list = new MyArrayList<>();
+        MyCollections.sort(list);
+
+    }
+
+    @Test(expected = MyIllegalArgumentException.class)
+    public void testSortEmptyListComparator() {
+        MyList<Integer> list = new MyArrayList<>();
+        Comparator<Integer> comp = null;
+        MyCollections.sort(list, comp);
 
     }
 

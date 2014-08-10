@@ -31,7 +31,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     private int bucketNumber;
     private double loadFactor;
 
-    private List<List<MyHashMapEntry>> buckets;
+    private List<List<MyHashMapEntry<K, V>>> buckets;
 
     /**
      *
@@ -92,7 +92,8 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         loadFactor = DEFAULT_CAPACITY_THRESHOLD;
         buckets = new ArrayList<>(bucketNumber);
         for (int i = 0; i < bucketNumber; i++) {
-            buckets.set(i, new LinkedList<MyHashMapEntry>());
+            buckets.add(null);
+            buckets.set(i, new LinkedList<MyHashMapEntry<K, V>>());
         }
 
     }
@@ -114,7 +115,8 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 
         buckets = new ArrayList<>(bucketNumber);
         for (int i = 0; i < bucketNumber; i++) {
-            buckets.set(i, new LinkedList<MyHashMapEntry>());
+            buckets.add(null);
+            buckets.set(i, new LinkedList<MyHashMapEntry<K, V>>());
         }
 
     }
@@ -135,7 +137,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     @Override
     public void clear() {
         for (int i = 0; i < bucketNumber; i++) {
-            buckets.set(i, new LinkedList<MyHashMapEntry>());
+            buckets.set(i, new LinkedList<MyHashMapEntry<K, V>>());
         }
         size = 0;
     }
@@ -146,7 +148,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
      * @return
      */
     private int getBucket(K key) {
-        return (key.hashCode() * MAGIC_INT) % bucketNumber;
+        return Math.abs((key.hashCode() * MAGIC_INT) % bucketNumber);
     }
 
     /**
@@ -156,7 +158,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
      * @return
      */
     private int getKeyIndexInTheBucket(K key, int bucket) {
-        List<MyHashMapEntry> someBucket = buckets.get(bucket);
+        List<MyHashMapEntry<K, V>> someBucket = buckets.get(bucket);
         int index = KEY_NOT_FOUND;
         for (int i = 0; i < someBucket.size(); i++) {
             if (key.equals(key)) {
@@ -230,7 +232,8 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
             bucketNumber = bucketNumber << BUCKET_SHIFT_FACTOR;
             buckets = new ArrayList<>(bucketNumber);
             for (int i = 0; i < bucketNumber; i++) {
-                buckets.set(i, new LinkedList<MyHashMapEntry>());
+                buckets.add(null);
+                buckets.set(i, new LinkedList<MyHashMapEntry<K, V>>());
             }
             size = 0;
             MyEntry<K, V> entry = null;
@@ -324,7 +327,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
          */
         @Override
         public boolean hasNext() {
-            return index < size;
+            return index < list.size();
         }
 
         /**

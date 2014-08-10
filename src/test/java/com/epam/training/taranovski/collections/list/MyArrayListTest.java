@@ -7,8 +7,8 @@ package com.epam.training.taranovski.collections.list;
 
 import com.epam.training.taranovski.collections.exceptions.MyIndexOutOfBoundsException;
 import com.epam.training.taranovski.collections.exceptions.MyIllegalArgumentException;
-import com.epam.training.taranovski.collections.list.MyArrayList;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -451,6 +451,116 @@ public class MyArrayListTest {
         }
         assertTrue(instance.isEmpty());
 
+    }
+
+    @Test
+    public void testConstructorWithCollection() {
+        MyArrayList<String> instance = new MyArrayList();
+        String[] array1 = {"1", "22", "333", "4444"};
+        instance.addAll(array1);
+        MyArrayList<String> instance1 = new MyArrayList(instance);
+
+        assertTrue(instance1.size() == 4);
+        assertTrue(array1[0] == instance1.get(0));
+        assertTrue(array1[1] == instance1.get(1));
+        assertTrue(array1[2] == instance1.get(2));
+        assertTrue(array1[3] == instance1.get(3));
+
+    }
+
+    @Test
+    public void testConstructorWithInitialSize() {
+        MyArrayList<String> instance = new MyArrayList(4);
+        String[] array1 = {"1", "22", "333", "4444"};
+        instance.addAll(array1);
+        //MyArrayList<String> instance1 = new MyArrayList(instance);
+
+        assertTrue(instance.size() == 4);
+        assertTrue(array1[0] == instance.get(0));
+        assertTrue(array1[1] == instance.get(1));
+        assertTrue(array1[2] == instance.get(2));
+        assertTrue(array1[3] == instance.get(3));
+
+    }
+
+    @Test(expected = MyIllegalArgumentException.class)
+    public void testConstructorWithInitialSize1() {
+        MyArrayList<String> instance = new MyArrayList(-4);
+    }
+
+    @Test
+    public void testEnsureCapacity() {
+        MyArrayList<String> instance = new MyArrayList(4);
+        String[] array1 = {"1", "22", "333", "4444"};
+        instance.addAll(array1);
+        //MyArrayList<String> instance1 = new MyArrayList(instance);
+
+        assertTrue(instance.size() == 4);
+        assertTrue(array1[0] == instance.get(0));
+        assertTrue(array1[1] == instance.get(1));
+        assertTrue(array1[2] == instance.get(2));
+        assertTrue(array1[3] == instance.get(3));
+        instance.ensureCapacity(10500);
+        assertTrue(instance.size() == 4);
+    }
+
+    @Test
+    public void testTrimToSize() {
+        MyArrayList<String> instance = new MyArrayList(4);
+        String[] array1 = {"1", "22", "333", "4444"};
+        instance.addAll(array1);
+        //MyArrayList<String> instance1 = new MyArrayList(instance);
+
+        assertTrue(instance.size() == 4);
+        assertTrue(array1[0] == instance.get(0));
+        assertTrue(array1[1] == instance.get(1));
+        assertTrue(array1[2] == instance.get(2));
+        assertTrue(array1[3] == instance.get(3));
+        instance.ensureCapacity(10500);
+        assertTrue(instance.size() == 4);
+        instance.trimToSize();
+        assertTrue(instance.size() == 4);
+        instance.add("5");
+        assertTrue(instance.get(4) == "5");
+    }
+
+    @Test
+    public void testInternalResizeArray() {
+        MyArrayList<Integer> instance = new MyArrayList();
+        for (int i = 0; i < 15; i++) {
+            instance.add(i);
+        }
+        instance.add(5, 135);
+        instance.add(7, 145);
+        assertTrue(instance.get(5) == 135);
+        assertTrue(instance.get(6) == 5);
+        assertTrue(instance.get(7) == 145);
+        assertTrue(instance.get(8) == 6);
+    }
+
+    @Test
+    public void testInternalResizeArray1() {
+        MyArrayList<Integer> instance = new MyArrayList();
+        for (int i = 0; i < 15; i++) {
+            instance.add(i);
+        }
+
+        Integer[] array = new Integer[]{1, 2, 3};
+
+        instance.addAll(6, array);
+
+        assertTrue(instance.get(5) == 5);
+        assertTrue(instance.get(6) == 1);
+        assertTrue(instance.get(7) == 2);
+        assertTrue(instance.get(8) == 3);
+        assertTrue(instance.get(9) == 6);
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testIteratorNextFromEmptyList() {
+        MyArrayList<String> instance = new MyArrayList();
+        Iterator<String> iterator = instance.iterator();
+        iterator.next();
     }
 
 }

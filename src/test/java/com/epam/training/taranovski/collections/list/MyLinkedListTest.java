@@ -173,6 +173,24 @@ public class MyLinkedListTest {
     }
 
     /**
+     * Test of removeLast method, of class MyLinkedList.
+     */
+    @Test
+    public void testRemoveLastFromEmptyList() {
+        System.out.println("removeLast");
+        MyLinkedList<Integer> instance = new MyLinkedList();
+        assertTrue(instance.isEmpty());
+        instance.add(1);
+        instance.add(2);
+        Integer expResult = 2;
+        //instance.removeLast();
+
+        Integer result = instance.removeLast();
+        assertEquals(expResult, result);
+
+    }
+
+    /**
      * Test of descendingIterator method, of class MyLinkedList.
      */
     @Test
@@ -482,6 +500,14 @@ public class MyLinkedListTest {
 
     }
 
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testAddArrayIntoEmptyList() {
+        System.out.println("toArray");
+        MyLinkedList<String> instance = new MyLinkedList();
+        String[] expResult = {"111", "2222", "sdafasdf"};
+        instance.addAll(0, expResult);
+    }
+
     /**
      * Test of offer method, of class MyLinkedList.
      */
@@ -738,7 +764,7 @@ public class MyLinkedListTest {
         MyLinkedList instance = new MyLinkedList();
         boolean expResult = false;
         boolean result = instance.addAll(index, c);
-        
+
     }
 
     /**
@@ -751,4 +777,127 @@ public class MyLinkedListTest {
         Object result = instance.pop();
 
     }
+
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testNextFromEmptyIterator() {
+        MyLinkedList instance = new MyLinkedList();
+        Iterator it = instance.descendingIterator();
+        it.next();
+    }
+
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testRemoveFromEmptyIterator() {
+        MyLinkedList instance = new MyLinkedList();
+        Iterator it = instance.descendingIterator();
+        it.remove();
+    }
+
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testNextFromEmptyIterator1() {
+        MyLinkedList instance = new MyLinkedList();
+        Iterator it = instance.iterator();
+        it.next();
+    }
+
+    @Test(expected = MyIndexOutOfBoundsException.class)
+    public void testRemoveFromEmptyIterator1() {
+        MyLinkedList instance = new MyLinkedList();
+        Iterator it = instance.iterator();
+        it.remove();
+    }
+
+    @Test
+    public void testConstructorFromCollection() {
+        MyLinkedList<Integer> instance = new MyLinkedList();
+        instance.add(1);
+        instance.add(2);
+        instance.add(3);
+        instance.add(4);
+        MyLinkedList<Integer> instance1 = new MyLinkedList(instance);
+        assertTrue(instance1.get(0) == 1);
+        assertTrue(instance1.get(1) == 2);
+        assertTrue(instance1.get(2) == 3);
+        assertTrue(instance1.get(3) == 4);
+    }
+
+    @Test
+    public void testIteratorRemoveFromMillde() {
+        MyLinkedList<Integer> instance = new MyLinkedList();
+        instance.add(1);
+        instance.add(2);
+        instance.add(3);
+        instance.add(4);
+
+        Iterator<Integer> iterator = instance.iterator();
+
+        iterator.next();
+        iterator.remove();
+
+        assertTrue(instance.get(0) == 1);
+        //assertTrue(instance.get(1) == 2);
+        assertTrue(instance.get(1) == 3);
+        assertTrue(instance.get(2) == 4);
+    }
+
+    @Test
+    public void testIteratorRemoveFromMillde1() {
+        MyLinkedList<Integer> instance = new MyLinkedList();
+        instance.add(1);
+        instance.add(2);
+        instance.add(3);
+        instance.add(4);
+
+        Iterator<Integer> iterator = instance.descendingIterator();
+
+        iterator.next();
+        iterator.remove();
+
+        assertTrue(instance.get(0) == 1);
+        assertTrue(instance.get(1) == 2);
+        //assertTrue(instance.get(1) == 3);
+        assertTrue(instance.get(2) == 4);
+    }
+
+    @Test
+    public void testIteratorRemoveFromEnd() {
+        MyLinkedList<Integer> instance = new MyLinkedList();
+        instance.add(1);
+        instance.add(2);
+        instance.add(3);
+        instance.add(4);
+
+        Iterator<Integer> iterator = instance.descendingIterator();
+
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        iterator.remove();
+
+        //assertTrue(instance.get(0) == 1);
+        assertTrue(instance.get(0) == 2);
+        assertTrue(instance.get(1) == 3);
+        assertTrue(instance.get(2) == 4);
+    }
+
+    @Test
+    public void testIteratorRemoveFromEnd1() {
+        MyLinkedList<Integer> instance = new MyLinkedList();
+        instance.add(1);
+        instance.add(2);
+        instance.add(3);
+        instance.add(4);
+
+        Iterator<Integer> iterator = instance.iterator();
+
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        iterator.remove();
+
+        assertTrue(instance.get(0) == 1);
+        assertTrue(instance.get(1) == 2);
+        assertTrue(instance.get(2) == 3);
+        //assertTrue(instance.get(2) == 4);
+    }
+
 }
