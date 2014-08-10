@@ -36,7 +36,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     /**
      *
      */
-    private class MyHashMapEntry implements MyEntry<K, V> {
+    private class MyHashMapEntry<K, V> implements MyEntry<K, V> {
 
         private final K key;
         private V value;
@@ -202,7 +202,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     public V get(K key) {
         int bucket = getBucket(key);
         if (containsKey(key)) {
-            MyHashMapEntry item = buckets.get(bucket).get(getKeyIndexInTheBucket(key, bucket));
+            MyHashMapEntry<K, V> item = buckets.get(bucket).get(getKeyIndexInTheBucket(key, bucket));
             V value = item.getValue();
             return value;
         } else {
@@ -225,7 +225,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     private void ensureCapacity() {
         double currentFillRate = size / bucketNumber;
         if (currentFillRate > loadFactor & bucketNumber < MAX_BUCKET_NUMBER) {
-            Iterator<? extends MyEntry> iterator = this.entryIterator();
+            Iterator<? extends MyEntry<K, V>> iterator = this.entryIterator();
 
             bucketNumber = bucketNumber << BUCKET_SHIFT_FACTOR;
             buckets = new ArrayList<>(bucketNumber);
@@ -233,10 +233,10 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
                 buckets.set(i, new LinkedList<MyHashMapEntry>());
             }
             size = 0;
-            MyEntry entry = null;
+            MyEntry<K, V> entry = null;
             while (iterator.hasNext()) {
                 entry = iterator.next();
-                this.put((K) entry.getKey(), (V) entry.getValue());
+                this.put(entry.getKey(), entry.getValue());
             }
         }
     }
@@ -252,7 +252,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         ensureCapacity();
         int bucket = getBucket(key);
         if (containsKey(key)) {
-            MyHashMapEntry item = buckets.get(bucket).get(getKeyIndexInTheBucket(key, bucket));
+            MyHashMapEntry<K, V> item = buckets.get(bucket).get(getKeyIndexInTheBucket(key, bucket));
             V oldValue = item.setValue(value);
             return oldValue;
         } else {
@@ -271,7 +271,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     public V remove(K key) {
         int bucket = getBucket(key);
         if (containsKey(key)) {
-            MyHashMapEntry item = buckets.get(bucket).remove(getKeyIndexInTheBucket(key, bucket));
+            MyHashMapEntry<K, V> item = buckets.get(bucket).remove(getKeyIndexInTheBucket(key, bucket));
             V value = item.getValue();
             size--;
             return value;
@@ -295,22 +295,22 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
      */
     @Override
     public Iterator<? extends MyEntry<K, V>> entryIterator() {
-        return new MyHashMapEntryIterator(this);
+        return new MyHashMapEntryIterator<K, V>(this);
     }
 
     /**
      *
      */
-    private class MyHashMapEntryIterator implements Iterator<MyHashMapEntry> {
+    private class MyHashMapEntryIterator<K, V> implements Iterator<MyHashMapEntry<K, V>> {
 
         private MyHashMap map;
-        private List<MyHashMapEntry> list = new LinkedList<>();
+        private List<MyHashMapEntry<K, V>> list = new LinkedList<>();
         private int index;
 
         /**
          *
          */
-        public MyHashMapEntryIterator(MyHashMap map) {
+        public MyHashMapEntryIterator(MyHashMap<K, V> map) {
             this.map = map;
             for (List tempList : buckets) {
                 list.addAll(tempList);
@@ -332,7 +332,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
          * @return
          */
         @Override
-        public MyHashMapEntry next() {
+        public MyHashMapEntry<K, V> next() {
             return list.get(index++);
         }
 
@@ -341,7 +341,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
          */
         @Override
         public void remove() {
-            MyHashMapEntry entry = list.remove(index);
+            MyHashMapEntry<K, V> entry = list.remove(index);
             map.remove(entry.getKey());
         }
 
