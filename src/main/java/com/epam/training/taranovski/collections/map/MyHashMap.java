@@ -230,10 +230,8 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         if (currentFillRate > loadFactor & bucketNumber < MAX_BUCKET_NUMBER) {
             Iterator<? extends MyEntry<K, V>> iterator = this.entryIterator();
 
-            System.out.println("buck1 = " + bucketNumber);
             bucketNumber = bucketNumber << BUCKET_SHIFT_FACTOR;
-            System.out.println("buck1 = " + bucketNumber);
-
+            
             buckets = new ArrayList<>(bucketNumber);
             for (int i = 0; i < bucketNumber; i++) {
                 buckets.add(null);
@@ -243,7 +241,6 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
             MyEntry<K, V> entry = null;
             while (iterator.hasNext()) {
                 entry = iterator.next();
-                System.out.println("iterator: key=" + entry.getKey() + " value=" + entry.getValue());
                 this.put(entry.getKey(), entry.getValue());
             }
         }
