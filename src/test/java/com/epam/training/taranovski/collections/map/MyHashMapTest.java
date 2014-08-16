@@ -249,9 +249,17 @@ public class MyHashMapTest {
     @Test
     public void testEnsureCapacity() {
         MyHashMap<String, Integer> instance = new MyHashMap<>();
-        instance.put("blah", 1005);
+        instance.put("blah", 100500);
+
+        assertTrue(instance.containsKey("blah"));
+        System.out.println("blah get: " + instance.get("blah"));
+
         for (int i = 0; i < 200; i++) {
             instance.put("" + i, i);
+        }
+
+        for (int i = 0; i < 200; i++) {
+            System.out.println("blah get: " + instance.get("" + i));
         }
 
         assertTrue(instance.containsKey("blah"));
