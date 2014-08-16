@@ -26,6 +26,10 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     private static class MyNode<T> {
 
+        private T value;
+        private MyNode<T> next;
+        private MyNode<T> previous;
+
         /**
          * constructor
          *
@@ -38,11 +42,6 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
             this.next = next;
             this.previous = previous;
         }
-
-        private T value;
-
-        private MyNode<T> next;
-        private MyNode<T> previous;
 
         /**
          * @return the value
@@ -86,6 +85,126 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
             this.previous = previous;
         }
 
+    }
+
+    private class MyIterator implements Iterator<T> {
+
+        MyNode<T> currentMyNode = start;
+
+        /**
+         * final version
+         *
+         * @return
+         */
+        @Override
+        public boolean hasNext() {
+            return currentMyNode != null;
+        }
+
+        /**
+         *
+         * @return
+         */
+        @Override
+        public T next() {
+            if (currentMyNode == null) {
+                throw new MyIndexOutOfBoundsException();
+            }
+            T value = currentMyNode.getValue();
+            currentMyNode = currentMyNode.getNext();
+            return value;
+        }
+
+        /**
+         *
+         */
+        @Override
+        public void remove() {
+            if (currentMyNode == null) {
+                throw new MyIndexOutOfBoundsException();
+            }
+            if (currentMyNode == end) {
+                if (start == end) {
+                    start = null;
+                    end = null;
+                } else {
+                    end = end.getPrevious();
+                    end.setNext(null);
+                }
+                currentMyNode = null;
+            } else if (currentMyNode == start) {
+                start = start.getNext();
+                start.setPrevious(null);
+                currentMyNode = start;
+            } else {
+                MyNode prevMyNode = currentMyNode.getPrevious();
+                MyNode nextMyNode = currentMyNode.getNext();
+                prevMyNode.setNext(nextMyNode);
+                nextMyNode.setPrevious(prevMyNode);
+                currentMyNode = nextMyNode;
+            }
+            size--;
+        }
+    }
+
+    private class MyDescendingIterator implements Iterator<T> {
+
+        MyNode<T> currentMyNode = end;
+
+        /**
+         * final version
+         *
+         * @return
+         */
+        @Override
+        public boolean hasNext() {
+            return currentMyNode != null;
+        }
+
+        /**
+         *
+         * @return
+         */
+        @Override
+        public T next() {
+            if (currentMyNode == null) {
+                throw new MyIndexOutOfBoundsException();
+            }
+            T value = currentMyNode.getValue();
+            currentMyNode = currentMyNode.getPrevious();
+            return value;
+        }
+
+        /**
+         *
+         */
+        @Override
+        public void remove() {
+            if (currentMyNode == null) {
+                throw new MyIndexOutOfBoundsException();
+            }
+            if (currentMyNode == start) {
+                if (start == end) {
+                    start = null;
+                    end = null;
+                } else {
+                    start = start.getNext();
+                    start.setPrevious(null);
+                }
+                currentMyNode = null;
+            } else if (currentMyNode == end) {
+                end = end.getPrevious();
+                end.setNext(null);
+                currentMyNode = end;
+            } else {
+                MyNode prevMyNode = currentMyNode.getPrevious();
+                MyNode nextMyNode = currentMyNode.getNext();
+                prevMyNode.setNext(nextMyNode);
+                nextMyNode.setPrevious(prevMyNode);
+                currentMyNode = prevMyNode;
+            }
+            size--;
+        }
     }
 
     private int size;
@@ -221,65 +340,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      * @return
      */
     public Iterator<T> descendingIterator() {
-        return new Iterator<T>() {
-
-            MyNode<T> currentMyNode = end;
-
-            /**
-             * final version
-             *
-             * @return
-             */
-            @Override
-            public boolean hasNext() {
-                return currentMyNode != null;
-            }
-
-            /**
-             *
-             * @return
-             */
-            @Override
-            public T next() {
-                if (currentMyNode == null) {
-                    throw new MyIndexOutOfBoundsException();
-                }
-                T value = currentMyNode.getValue();
-                currentMyNode = currentMyNode.getPrevious();
-                return value;
-            }
-
-            /**
-             *
-             */
-            @Override
-            public void remove() {
-                if (currentMyNode == null) {
-                    throw new MyIndexOutOfBoundsException();
-                }
-                if (currentMyNode == start) {
-                    if (start == end) {
-                        start = null;
-                        end = null;
-                    } else {
-                        start = start.getNext();
-                        start.setPrevious(null);
-                    }
-                    currentMyNode = null;
-                } else if (currentMyNode == end) {
-                    end = end.getPrevious();
-                    end.setNext(null);
-                    currentMyNode = end;
-                } else {
-                    MyNode prevMyNode = currentMyNode.getPrevious();
-                    MyNode nextMyNode = currentMyNode.getNext();
-                    prevMyNode.setNext(nextMyNode);
-                    nextMyNode.setPrevious(prevMyNode);
-                    currentMyNode = prevMyNode;
-                }
-                size--;
-            }
-        };
+        return new MyDescendingIterator();
     }
 
     /**
@@ -288,65 +349,7 @@ public class MyLinkedList<T> implements MyList<T>, MyQueue<T>, MyStack<T> {
      */
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
-
-            MyNode<T> currentMyNode = start;
-
-            /**
-             * final version
-             *
-             * @return
-             */
-            @Override
-            public boolean hasNext() {
-                return currentMyNode != null;
-            }
-
-            /**
-             *
-             * @return
-             */
-            @Override
-            public T next() {
-                if (currentMyNode == null) {
-                    throw new MyIndexOutOfBoundsException();
-                }
-                T value = currentMyNode.getValue();
-                currentMyNode = currentMyNode.getNext();
-                return value;
-            }
-
-            /**
-             *
-             */
-            @Override
-            public void remove() {
-                if (currentMyNode == null) {
-                    throw new MyIndexOutOfBoundsException();
-                }
-                if (currentMyNode == end) {
-                    if (start == end) {
-                        start = null;
-                        end = null;
-                    } else {
-                        end = end.getPrevious();
-                        end.setNext(null);
-                    }
-                    currentMyNode = null;
-                } else if (currentMyNode == start) {
-                    start = start.getNext();
-                    start.setPrevious(null);
-                    currentMyNode = start;
-                } else {
-                    MyNode prevMyNode = currentMyNode.getPrevious();
-                    MyNode nextMyNode = currentMyNode.getNext();
-                    prevMyNode.setNext(nextMyNode);
-                    nextMyNode.setPrevious(prevMyNode);
-                    currentMyNode = nextMyNode;
-                }
-                size--;
-            }
-        };
+        return new MyIterator();
     }
 
     /**

@@ -26,6 +26,42 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
     private int size;
     private Object[] array;
 
+    private class MyIterator implements Iterator<T> {
+
+        int i = 0;
+
+        /**
+         *
+         * @return
+         */
+        @Override
+        public boolean hasNext() {
+            return i < size;
+        }
+
+        /**
+         *
+         * @return
+         */
+        @Override
+        public T next() {
+            if (i >= size) {
+                throw new NoSuchElementException();
+            }
+            return (T) array[i++];
+        }
+
+        /**
+         *
+         */
+        @Override
+        public void remove() {
+            System.arraycopy(array, i + 1, array, i, size - i);
+            size--;
+        }
+
+    }
+
     /**
      * default constructor
      */
@@ -312,40 +348,7 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
      */
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            int i = 0;
-
-            /**
-             *
-             * @return
-             */
-            @Override
-            public boolean hasNext() {
-                return i < size;
-            }
-
-            /**
-             *
-             * @return
-             */
-            @Override
-            public T next() {
-                if (i >= size) {
-                    throw new NoSuchElementException();
-                }
-                return (T) array[i++];
-            }
-
-            /**
-             *
-             */
-            @Override
-            public void remove() {
-                System.arraycopy(array, i + 1, array, i, size - i);
-                size--;
-            }
-
-        };
+        return new MyIterator();
     }
 
 }

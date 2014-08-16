@@ -205,8 +205,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         int bucket = getBucket(key);
         if (containsKey(key)) {
             MyHashMapEntry<K, V> item = buckets.get(bucket).get(getKeyIndexInTheBucket(key, bucket));
-            V value = item.getValue();
-            return value;
+            return item.getValue();
         } else {
             throw new MyNoSuchElementException();
         }
@@ -256,8 +255,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         int bucket = getBucket(key);
         if (containsKey(key)) {
             MyHashMapEntry<K, V> item = buckets.get(bucket).get(getKeyIndexInTheBucket(key, bucket));
-            V oldValue = item.setValue(value);
-            return oldValue;
+            return item.setValue(value);
         } else {
             buckets.get(bucket).add(new MyHashMapEntry(key, value));
             size++;

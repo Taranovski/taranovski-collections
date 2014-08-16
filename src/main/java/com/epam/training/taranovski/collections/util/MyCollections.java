@@ -17,6 +17,9 @@ import java.util.Comparator;
  */
 public class MyCollections {
 
+    private MyCollections() {
+    }
+
     /**
      *
      * @param list
@@ -113,14 +116,13 @@ public class MyCollections {
      * @return
      */
     private static int bisectionSearch(MyList list, Comparable key, int start, int end) {
-        System.out.println("start " + start + " end " + end);
         if (key.compareTo(list.get(end)) > 0) {
             return -1 - end - 1;
         }
         if (key.compareTo(list.get(start)) < 0) {
             return -1;
         }
-        
+
         if (end - start <= 1) {
             if (key.equals(list.get(end))) {
                 return end;
@@ -197,9 +199,6 @@ public class MyCollections {
 
         int min = lowBound;
         int max = highBound;
-
-//        System.out.println(Arrays.toString(list.toArray()));
-//        System.out.println("lower " + lowBound + " higher " + highBound);
         while (highBound - lowBound > 0) {
 
             for (int i = lowBound; i <= highBound; i++) {
@@ -210,10 +209,6 @@ public class MyCollections {
                     min = i;
                 }
             }
-//            System.out.println("lower " + lowBound + " higher " + highBound);
-//            System.out.println("min " + min + " max " + max);
-//            System.out.println(Arrays.toString(list.toArray()));
-
             if (max == lowBound) {
                 swap(list, highBound, max);
             } else if (min == highBound) {
@@ -224,8 +219,6 @@ public class MyCollections {
                 swap(list, lowBound, min);
                 swap(list, highBound, max);
             }
-//            System.out.println(Arrays.toString(list.toArray()));
-
             lowBound++;
             highBound--;
 
@@ -244,9 +237,7 @@ public class MyCollections {
     private static void quicksortComparator(MyList list, Comparator c, int low, int high) {
         int i = low;
         int j = high;
-
-        //Class clazz = list.get(i).getClass();
-        // Get the pivot element from the middle of the list
+// Get the pivot element from the middle of the list
         Object pivot = list.get(low + (high - low) / 2);
 
         // Divide into two lists
@@ -297,9 +288,6 @@ public class MyCollections {
 
         int min = lowBound;
         int max = highBound;
-
-//        System.out.println(Arrays.toString(list.toArray()));
-//        System.out.println("lower " + lowBound + " higher " + highBound);
         while (highBound - lowBound > 0) {
 
             for (int i = lowBound; i <= highBound; i++) {
@@ -310,10 +298,6 @@ public class MyCollections {
                     min = i;
                 }
             }
-//            System.out.println("lower " + lowBound + " higher " + highBound);
-//            System.out.println("min " + min + " max " + max);
-//            System.out.println(Arrays.toString(list.toArray()));
-
             if (max == lowBound) {
                 swap(list, highBound, max);
             } else if (min == highBound) {
@@ -324,7 +308,7 @@ public class MyCollections {
                 swap(list, lowBound, min);
                 swap(list, highBound, max);
             }
-//            System.out.println(Arrays.toString(list.toArray()));
+            System.out.println(Arrays.toString(list.toArray()));
 
             lowBound++;
             highBound--;
