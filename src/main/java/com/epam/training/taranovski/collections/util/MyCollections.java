@@ -8,7 +8,6 @@ package com.epam.training.taranovski.collections.util;
 import com.epam.training.taranovski.collections.exceptions.MyIllegalArgumentException;
 import com.epam.training.taranovski.collections.interfaces.MyList;
 import com.epam.training.taranovski.collections.interfaces.MyRandomAccess;
-import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -265,7 +264,6 @@ public class MyCollections {
                 j--;
             }
 
-            System.out.println("asdfasdf");
         }
         // Recursion
         if (low < j) {
@@ -308,8 +306,7 @@ public class MyCollections {
                 swap(list, lowBound, min);
                 swap(list, highBound, max);
             }
-            System.out.println(Arrays.toString(list.toArray()));
-
+            
             lowBound++;
             highBound--;
 

@@ -335,7 +335,6 @@ public class MyArrayList<T> implements MyList<T>, MyRandomAccess {
 
         T[] newArray = (T[]) java.lang.reflect.Array.newInstance(array[0].getClass(), size);
 
-        T item = null;
         for (int i = 0; i < size; i++) {
             newArray[i] = (T) array[i];
         }
