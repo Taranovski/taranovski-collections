@@ -7,12 +7,8 @@ package com.epam.training.taranovski.collections.util;
 
 import com.epam.training.taranovski.collections.exceptions.MyIllegalArgumentException;
 import com.epam.training.taranovski.collections.interfaces.MyList;
-import com.epam.training.taranovski.collections.interfaces.MyRandomAccess;
-import com.epam.training.taranovski.collections.list.MyArrayList;
 import com.epam.training.taranovski.collections.list.MyArrayList;
 import com.epam.training.taranovski.collections.list.MyLinkedList;
-import com.epam.training.taranovski.collections.list.MyLinkedList;
-import com.epam.training.taranovski.collections.util.MyCollections;
 import java.util.Arrays;
 import java.util.Comparator;
 import org.junit.After;

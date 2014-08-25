@@ -231,7 +231,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
             Iterator<? extends MyEntry<K, V>> iterator = this.entryIterator();
 
             bucketNumber = bucketNumber << BUCKET_SHIFT_FACTOR;
-            
+
             buckets = new ArrayList<>(bucketNumber);
             for (int i = 0; i < bucketNumber; i++) {
                 buckets.add(null);
@@ -337,6 +337,9 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
          */
         @Override
         public MyHashMapEntry<K, V> next() {
+            if (index >= list.size()) {
+                throw new MyNoSuchElementException();
+            }
             return list.get(index++);
         }
 
@@ -345,6 +348,9 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
          */
         @Override
         public void remove() {
+            if (index >= list.size()) {
+                throw new MyNoSuchElementException();
+            }
             MyHashMapEntry<K, V> entry = list.remove(index);
             map.remove(entry.getKey());
         }
