@@ -73,19 +73,11 @@ public class MyTreeMapTest {
         boolean result = instance.containsKey(key);
         assertEquals(expResult, result);
 
-        for (int i = 0; i < 20; i++) {
-            Iterator<? extends MyEntry<Integer, String>> iterator = instance.entryIterator();
-
-            while (iterator.hasNext()) {
-                System.out.println(iterator.next());
-            }
-
-            System.out.println(i);
+        for (int i = 0; i < 2000; i++) {
             instance.put(i, "myvalue" + i);
         }
 
-        for (int i = 0;
-                i < 20; i++) {
+        for (int i = 0; i < 2000; i++) {
             assertTrue(instance.containsKey(i));
         }
     }
@@ -105,12 +97,11 @@ public class MyTreeMapTest {
         boolean result = instance.containsValue(value);
         assertEquals(expResult, result);
 
-        for (int i = 0; i < 20; i++) {
-            System.out.println(i);
-            System.out.println(instance.put(i, ("myvalue" + i)));
+        for (int i = 0; i < 2000; i++) {
+            instance.put(i, ("myvalue" + i));
         }
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 2000; i++) {
             assertTrue(instance.containsValue("myvalue" + i));
 
         }
@@ -120,88 +111,126 @@ public class MyTreeMapTest {
     /**
      * Test of get method, of class MyTreeMap.
      */
-//    @Test
-//    public void testGet() {
-//        System.out.println("get");
-//        Object key = null;
-//        MyTreeMap instance = new MyTreeMap();
-//        Object expResult = null;
-//        Object result = instance.get(key);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of isEmpty method, of class MyTreeMap.
-//     */
-//    @Test
-//    public void testIsEmpty() {
-//        System.out.println("isEmpty");
-//        MyTreeMap instance = new MyTreeMap();
-//        boolean expResult = false;
-//        boolean result = instance.isEmpty();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of put method, of class MyTreeMap.
-//     */
-//    @Test
-//    public void testPut() {
-//        System.out.println("put");
-//        Object key = null;
-//        Object value = null;
-//        MyTreeMap instance = new MyTreeMap();
-//        Object expResult = null;
-//        Object result = instance.put(key, value);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of remove method, of class MyTreeMap.
-//     */
-//    @Test
-//    public void testRemove() {
-//        System.out.println("remove");
-//        Object key = null;
-//        MyTreeMap instance = new MyTreeMap();
-//        Object expResult = null;
-//        Object result = instance.remove(key);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of size method, of class MyTreeMap.
-//     */
-//    @Test
-//    public void testSize() {
-//        System.out.println("size");
-//        MyTreeMap instance = new MyTreeMap();
-//        int expResult = 0;
-//        int result = instance.size();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of entryIterator method, of class MyTreeMap.
-//     */
-//    @Test
-//    public void testEntryIterator() {
-//        System.out.println("entryIterator");
-//        MyTreeMap instance = new MyTreeMap();
-//        Iterator<? extends MyMap.MyEntry<K, V>> expResult = null;
-//        Iterator<? extends MyMap.MyEntry<K, V>> result = instance.entryIterator();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+    @Test
+    public void testGet() {
+        System.out.println("get");
+        String key = "blah";
+        Integer value = 100500;
+        MyTreeMap<String, Integer> instance = new MyTreeMap<>();
+        instance.put(key, value);
+        int expResult = 100500;
+        int result = instance.get(key);
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of isEmpty method, of class MyTreeMap.
+     */
+    @Test
+    public void testIsEmpty() {
+        System.out.println("isEmpty");
+        MyTreeMap instance = new MyTreeMap();
+        boolean expResult = true;
+        boolean result = instance.isEmpty();
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of put method, of class MyTreeMap.
+     */
+    @Test
+    public void testPut() {
+        System.out.println("put");
+        String key = "blah";
+        Integer value = 100501;
+        MyTreeMap<String, Integer> instance = new MyTreeMap<>();
+        instance.put(key, value);
+        int expResult = 100501;
+        int result = instance.get(key);
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of remove method, of class MyTreeMap.
+     */
+    @Test
+    public void testRemove() {
+        System.out.println("remove");
+        String key = "blah";
+        Integer value = 100501;
+        MyTreeMap<String, Integer> instance = new MyTreeMap<>();
+        assertTrue(instance.isEmpty());
+        instance.put(key, value);
+        assertFalse(instance.isEmpty());
+        int expResult = 100501;
+        int result = instance.remove(key);
+        assertEquals(expResult, result);
+        assertTrue(instance.isEmpty());
+
+    }
+
+    /**
+     * Test of size method, of class MyTreeMap.
+     */
+    @Test
+    public void testSize() {
+        System.out.println("size");
+        MyTreeMap instance = new MyTreeMap();
+        int expResult = 0;
+        int result = instance.size();
+        assertEquals(expResult, result);
+        instance.put(1, 2);
+        expResult = 1;
+        result = instance.size();
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of entryIterator method, of class MyTreeMap.
+     */
+    @Test
+    public void testEntryIterator() {
+        System.out.println("entryIterator");
+        MyTreeMap<Integer, String> instance = new MyTreeMap<>();
+        for (int i = 0; i < 2000; i++) {
+            instance.put(i, ("myvalue" + i));
+        }
+
+        Iterator<? extends MyMap.MyEntry<Integer, String>> iterator = instance.entryIterator();
+        int c = 0;
+        while (iterator.hasNext()) {
+            MyMap.MyEntry<Integer, String> entry = iterator.next();
+            assertTrue(entry.getKey() == c);
+            assertTrue(("myvalue" + c).equals(entry.getValue()));
+            c++;
+        }
+        assertTrue(instance.size() == 2000);
+    }
+    
+    /**
+     * Test of entryIterator method, of class MyTreeMap.
+     */
+    @Test
+    public void testEntryIterator1() {
+        System.out.println("entryIterator");
+        MyTreeMap<Integer, String> instance = new MyTreeMap<>();
+        for (int i = 0; i < 2000; i++) {
+            instance.put(i, ("myvalue" + i));
+        }
+
+        Iterator<? extends MyMap.MyEntry<Integer, String>> iterator = instance.entryIterator();
+        int c = 0;
+        while (iterator.hasNext()) {
+            MyMap.MyEntry<Integer, String> entry = iterator.next();
+            assertTrue(entry.getKey() == c);
+            assertTrue(("myvalue" + c).equals(entry.getValue()));
+            iterator.remove();
+            c++;
+        }
+        assertTrue(instance.size() == 0);
+    }
 }
