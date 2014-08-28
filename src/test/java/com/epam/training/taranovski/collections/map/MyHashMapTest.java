@@ -7,15 +7,15 @@ package com.epam.training.taranovski.collections.map;
 
 import com.epam.training.taranovski.collections.exceptions.MyNoSuchElementException;
 import com.epam.training.taranovski.collections.interfaces.MyMap;
+import com.epam.training.taranovski.collections.interfaces.MyMap.MyEntry;
+import java.util.Iterator;
 import org.junit.After;
 import org.junit.AfterClass;
+
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.Iterator;
-
-import static org.junit.Assert.*;
 
 /**
  *
@@ -241,36 +241,83 @@ public class MyHashMapTest {
         assertTrue(instance.size() == 0);
     }
 
+    /**
+     *
+     */
     @Test
     public void testConstructorWithCapacity() {
+        System.out.println("testConstructorWithCapacity");
         MyHashMap<String, Integer> instance = new MyHashMap<>(100500);
+        
+        for (int i = 0; i < 10000; i++) {
+            instance.put("blah" + i, i);
+        }
+
+        for (int i = 0; i < 10000; i++) {
+            assertTrue(instance.get("blah" + i) == i);
+        }
     }
 
+    /**
+     *
+     */
     @Test
     public void testEnsureCapacity() {
+        System.out.println("testEnsureCapacity");
         MyHashMap<String, Integer> instance = new MyHashMap<>();
         instance.put("blah", 100500);
 
         assertTrue(instance.containsKey("blah"));
-        System.out.println("blah get: " + instance.get("blah"));
 
         for (int i = 0; i < 200; i++) {
             instance.put("" + i, i);
         }
 
-        for (int i = 0; i < 200; i++) {
-            System.out.println("blah get: " + instance.get("" + i));
-        }
-
         assertTrue(instance.containsKey("blah"));
-        System.out.println("blah get: " + instance.get("blah"));
-
-        for (int i = 0; i < 200; i++) {
-            System.out.println("get number: " + i + "" + instance.get("" + i));
-        }
 
         assertTrue(instance.containsValue(100500));
         assertTrue(instance.get("blah") == 100500);
 
+    }
+
+    /**
+     *
+     */
+    @Test(expected = MyNoSuchElementException.class)
+    public void testNextFromIteratorOutOfMap() {
+        System.out.println("testNextFromIteratorOutOfMap");
+        MyHashMap<String, Integer> instance = new MyHashMap<>();
+        Iterator<? extends MyEntry<String, Integer>> iterator = instance.entryIterator();
+        iterator.next();
+    }
+
+    /**
+     *
+     */
+    @Test(expected = MyNoSuchElementException.class)
+    public void testRemoveFromIteratorOutOfMap() {
+        System.out.println("testRemoveFromIteratorOutOfMap");
+        MyHashMap<String, Integer> instance = new MyHashMap<>();
+        Iterator<? extends MyEntry<String, Integer>> iterator = instance.entryIterator();
+        iterator.remove();
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testConstructorWithLoadFactor() {
+        System.out.println("testConstructorWithLoadFactor");
+        int initialCapacity = 10;
+        double loadFactor = 0.5;
+        MyHashMap<String, Integer> instance = new MyHashMap<>(initialCapacity, loadFactor);
+
+        for (int i = 0; i < 10000; i++) {
+            instance.put("blah" + i, i);
+        }
+
+        for (int i = 0; i < 10000; i++) {
+            assertTrue(instance.get("blah" + i) == i);
+        }
     }
 }

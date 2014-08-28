@@ -5,9 +5,11 @@
  */
 package com.epam.training.taranovski.collections.map;
 
+import com.epam.training.taranovski.collections.exceptions.MyIllegalArgumentException;
 import com.epam.training.taranovski.collections.interfaces.MyMap;
 import com.epam.training.taranovski.collections.interfaces.MyMap.MyEntry;
 import com.epam.training.taranovski.collections.map.MyTreeMap.MyTreeMapEntry;
+import java.util.Comparator;
 import java.util.Iterator;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -210,7 +212,7 @@ public class MyTreeMapTest {
         }
         assertTrue(instance.size() == 2000);
     }
-    
+
     /**
      * Test of entryIterator method, of class MyTreeMap.
      */
@@ -232,5 +234,149 @@ public class MyTreeMapTest {
             c++;
         }
         assertTrue(instance.size() == 0);
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testConstructorWithComparator() {
+        System.out.println("testConstructorWithComparator");
+        MyTreeMap<Integer, String> instance = new MyTreeMap<>(new Comparator<Integer>() {
+            /**
+             *
+             * @param o1
+             * @param o2
+             * @return
+             */
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+
+        });
+        for (int i = 0; i < 2000; i++) {
+            instance.put(i, ("myvalue" + i));
+        }
+
+        Iterator<? extends MyMap.MyEntry<Integer, String>> iterator = instance.entryIterator();
+        int c = 1999;
+        while (iterator.hasNext()) {
+            MyMap.MyEntry<Integer, String> entry = iterator.next();
+            assertTrue(entry.getKey() == c);
+            assertTrue(("myvalue" + c).equals(entry.getValue()));
+            iterator.remove();
+            c--;
+        }
+        assertTrue(instance.size() == 0);
+
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testPutWithComparator() {
+        System.out.println("testPutWithComparator");
+        MyTreeMap<Integer, String> instance = new MyTreeMap<>(new Comparator<Integer>() {
+
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+
+        });
+        for (int i = 0; i < 2000; i++) {
+            instance.put(i, ("myvalue" + i));
+        }
+
+        for (int i = 0; i < 2000; i++) {
+            assertTrue(instance.containsValue("myvalue" + i));
+            assertTrue(instance.containsKey(i));
+            assertTrue(("myvalue" + i).equals(instance.get(i)));
+        }
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testPutNullWithComparator() {
+        System.out.println("testPutNullWithComparator");
+        MyTreeMap<Integer, String> instance = new MyTreeMap<>(new Comparator<Integer>() {
+
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+
+        });
+        for (int i = 2000; i > -2000; i--) {
+            instance.put(i, null);
+        }
+
+        for (int i = 0; i <= 2000; i++) {
+            assertTrue(instance.containsValue(null));
+            assertTrue(instance.containsKey(i));
+            assertTrue(instance.get(i) == null);
+        }
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testPutNullValueWithoutComparator() {
+        System.out.println("testPutNullValueWithoutComparator");
+        MyTreeMap<Integer, String> instance = new MyTreeMap<>();
+        for (int i = 2000; i > -2000; i--) {
+            instance.put(i, null);
+        }
+
+        for (int i = 0; i <= 2000; i++) {
+            assertTrue(instance.containsValue(null));
+            assertTrue(instance.containsKey(i));
+            assertTrue(instance.get(i) == null);
+        }
+    }
+
+    /**
+     *
+     */
+    @Test(expected = MyIllegalArgumentException.class)
+    public void testPutNullKeyWithoutComparator() {
+        System.out.println("testPutNullKeyWithoutComparator");
+        MyTreeMap<Integer, String> instance = new MyTreeMap<>();
+
+        instance.put(null, null);
+    }
+    
+    /**
+     *
+     */
+    @Test(expected = MyIllegalArgumentException.class)
+    public void testGetNullKeyWithoutComparator() {
+        System.out.println("testPutNullKeyWithoutComparator");
+        MyTreeMap<Integer, String> instance = new MyTreeMap<>();
+
+        instance.get(null);
+    }
+    
+    /**
+     *
+     */
+    @Test
+    public void testRemoveItems() {
+        System.out.println("testRemoveItems");
+        MyTreeMap<Integer, String> instance = new MyTreeMap<>();
+        for (int i = 2000; i >= -2000; i--) {
+            instance.put(i, ("myValue" + i));
+        }
+
+        for (int i = -2000; i <= 2000; i++) {
+            assertTrue(instance.containsValue(("myValue" + i)));
+            assertTrue(instance.containsKey(i));
+            assertTrue(("myValue" + i).equals(instance.remove(i)));
+        }
     }
 }

@@ -44,6 +44,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
          *
          * @param key
          * @param value
+         * @param parent
          */
         public MyTreeMapEntry(K key, V value, MyTreeMapEntry<K, V> parent) {
             this.key = key;
@@ -79,29 +80,6 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
             V tempValue = this.value;
             this.value = value;
             return tempValue;
-        }
-
-        /**
-         *
-         * @param key
-         */
-        private void setKey(K key) {
-            this.key = key;
-        }
-
-        /**
-         *
-         * @return
-         */
-        @Override
-        public String toString() {
-            String colorStr = (color ? "black" : "red");
-            return this.hashCode() + "\ncolor: " + colorStr
-                    + "\nkey: " + key
-                    + "\nvalue: " + value
-                    + "\nparent: " + (parent == null ? null : parent.hashCode())
-                    + "\nleft: " + (left == null ? null : left.hashCode())
-                    + "\nright: " + (right == null ? null : right.hashCode());
         }
 
     }
@@ -244,7 +222,13 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      */
     @Override
     public boolean containsKey(K key) {
-        return get(key) != null;
+        MyTreeMapEntry<K, V> node = null;
+        if (comparator != null) {
+            node = getEntryUsingComparator(key);
+        } else {
+            node = getEntry(key);
+        }
+        return node != null || get(key) != null;
     }
 
     /**
@@ -306,50 +290,56 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      */
     @Override
     public V put(K key, V value) {
+        if (key == null) {
+            throw new MyIllegalArgumentException();
+        }
         MyTreeMapEntry<K, V> t = head;
 
         if (t == null) {
-            
+
             head = new MyTreeMapEntry<>(key, value, null);
             size = 1;
             return null;
         }
         int cmp;
-        MyTreeMapEntry<K,V> parent;
+        MyTreeMapEntry<K, V> parent;
         // split comparator and comparable paths
         Comparator<? super K> cpr = comparator;
         if (cpr != null) {
             do {
                 parent = t;
                 cmp = cpr.compare(key, t.key);
-                if (cmp < 0)
+                if (cmp < 0) {
                     t = t.left;
-                else if (cmp > 0)
+                } else if (cmp > 0) {
                     t = t.right;
-                else
+                } else {
                     return t.setValue(value);
+                }
             } while (t != null);
-        }
-        else {
-            if (key == null)
+        } else {
+            if (key == null) {
                 throw new NullPointerException();
+            }
             Comparable<? super K> k = (Comparable<? super K>) key;
             do {
                 parent = t;
                 cmp = k.compareTo(t.key);
-                if (cmp < 0)
+                if (cmp < 0) {
                     t = t.left;
-                else if (cmp > 0)
+                } else if (cmp > 0) {
                     t = t.right;
-                else
+                } else {
                     return t.setValue(value);
+                }
             } while (t != null);
         }
-        MyTreeMapEntry<K,V> e = new MyTreeMapEntry<>(key, value, parent);
-        if (cmp < 0)
+        MyTreeMapEntry<K, V> e = new MyTreeMapEntry<>(key, value, parent);
+        if (cmp < 0) {
             parent.left = e;
-        else
+        } else {
             parent.right = e;
+        }
         fixAfterInsertion(e);
         size++;
         return null;
@@ -361,17 +351,19 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      */
     private void rotateLeft(MyTreeMapEntry<K, V> p) {
         if (p != null) {
-            MyTreeMapEntry<K,V> r = p.right;
+            MyTreeMapEntry<K, V> r = p.right;
             p.right = r.left;
-            if (r.left != null)
+            if (r.left != null) {
                 r.left.parent = p;
+            }
             r.parent = p.parent;
-            if (p.parent == null)
+            if (p.parent == null) {
                 head = r;
-            else if (p.parent.left == p)
+            } else if (p.parent.left == p) {
                 p.parent.left = r;
-            else
+            } else {
                 p.parent.right = r;
+            }
             r.left = p;
             p.parent = r;
         }
@@ -383,15 +375,19 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      */
     private void rotateRight(MyTreeMapEntry<K, V> p) {
         if (p != null) {
-            MyTreeMapEntry<K,V> l = p.left;
+            MyTreeMapEntry<K, V> l = p.left;
             p.left = l.right;
-            if (l.right != null) l.right.parent = p;
+            if (l.right != null) {
+                l.right.parent = p;
+            }
             l.parent = p.parent;
-            if (p.parent == null)
+            if (p.parent == null) {
                 head = l;
-            else if (p.parent.right == p)
+            } else if (p.parent.right == p) {
                 p.parent.right = l;
-            else p.parent.left = l;
+            } else {
+                p.parent.left = l;
+            }
             l.right = p;
             p.parent = l;
         }
@@ -406,7 +402,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
 
         while (x != null && x != head && x.parent.color == RED) {
             if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
-                MyTreeMapEntry<K,V> y = rightOf(parentOf(parentOf(x)));
+                MyTreeMapEntry<K, V> y = rightOf(parentOf(parentOf(x)));
                 if (colorOf(y) == RED) {
                     setColor(parentOf(x), BLACK);
                     setColor(y, BLACK);
@@ -422,7 +418,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
                     rotateRight(parentOf(parentOf(x)));
                 }
             } else {
-                MyTreeMapEntry<K,V> y = leftOf(parentOf(parentOf(x)));
+                MyTreeMapEntry<K, V> y = leftOf(parentOf(parentOf(x)));
                 if (colorOf(y) == RED) {
                     setColor(parentOf(x), BLACK);
                     setColor(y, BLACK);
@@ -470,16 +466,17 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      * @return
      */
     private MyTreeMapEntry<K, V> successor(MyTreeMapEntry<K, V> t) {
-        if (t == null)
+        if (t == null) {
             return null;
-        else if (t.right != null) {
-            MyTreeMapEntry<K,V> p = t.right;
-            while (p.left != null)
+        } else if (t.right != null) {
+            MyTreeMapEntry<K, V> p = t.right;
+            while (p.left != null) {
                 p = p.left;
+            }
             return p;
         } else {
-            MyTreeMapEntry<K,V> p = t.parent;
-            MyTreeMapEntry<K,V> ch = t;
+            MyTreeMapEntry<K, V> p = t.parent;
+            MyTreeMapEntry<K, V> ch = t;
             while (p != null && ch == p.right) {
                 ch = p;
                 p = p.parent;
@@ -498,42 +495,46 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
         // If strictly internal, copy successor's element to p and then make p
         // point to successor.
         if (p.left != null && p.right != null) {
-            MyTreeMapEntry<K,V> s = successor(p);
+            MyTreeMapEntry<K, V> s = successor(p);
             p.key = s.key;
             p.value = s.value;
             p = s;
         } // p has 2 children
 
         // Start fixup at replacement node, if it exists.
-        MyTreeMapEntry<K,V> replacement = (p.left != null ? p.left : p.right);
+        MyTreeMapEntry<K, V> replacement = (p.left != null ? p.left : p.right);
 
         if (replacement != null) {
             // Link replacement to parent
             replacement.parent = p.parent;
-            if (p.parent == null)
+            if (p.parent == null) {
                 head = replacement;
-            else if (p == p.parent.left)
-                p.parent.left  = replacement;
-            else
+            } else if (p == p.parent.left) {
+                p.parent.left = replacement;
+            } else {
                 p.parent.right = replacement;
+            }
 
             // Null out links so they are OK to use by fixAfterDeletion.
             p.left = p.right = p.parent = null;
 
             // Fix replacement
-            if (p.color == BLACK)
+            if (p.color == BLACK) {
                 fixAfterDeletion(replacement);
+            }
         } else if (p.parent == null) { // return if we are the only node.
             head = null;
         } else { //  No children. Use self as phantom replacement and unlink.
-            if (p.color == BLACK)
+            if (p.color == BLACK) {
                 fixAfterDeletion(p);
+            }
 
             if (p.parent != null) {
-                if (p == p.parent.left)
+                if (p == p.parent.left) {
                     p.parent.left = null;
-                else if (p == p.parent.right)
+                } else if (p == p.parent.right) {
                     p.parent.right = null;
+                }
                 p.parent = null;
             }
         }
@@ -546,7 +547,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
     private void fixAfterDeletion(MyTreeMapEntry<K, V> x) {
         while (x != head && colorOf(x) == BLACK) {
             if (x == leftOf(parentOf(x))) {
-                MyTreeMapEntry<K,V> sib = rightOf(parentOf(x));
+                MyTreeMapEntry<K, V> sib = rightOf(parentOf(x));
 
                 if (colorOf(sib) == RED) {
                     setColor(sib, BLACK);
@@ -555,8 +556,8 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
                     sib = rightOf(parentOf(x));
                 }
 
-                if (colorOf(leftOf(sib))  == BLACK &&
-                    colorOf(rightOf(sib)) == BLACK) {
+                if (colorOf(leftOf(sib)) == BLACK
+                        && colorOf(rightOf(sib)) == BLACK) {
                     setColor(sib, RED);
                     x = parentOf(x);
                 } else {
@@ -573,7 +574,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
                     x = head;
                 }
             } else { // symmetric
-                MyTreeMapEntry<K,V> sib = leftOf(parentOf(x));
+                MyTreeMapEntry<K, V> sib = leftOf(parentOf(x));
 
                 if (colorOf(sib) == RED) {
                     setColor(sib, BLACK);
@@ -582,8 +583,8 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
                     sib = leftOf(parentOf(x));
                 }
 
-                if (colorOf(rightOf(sib)) == BLACK &&
-                    colorOf(leftOf(sib)) == BLACK) {
+                if (colorOf(rightOf(sib)) == BLACK
+                        && colorOf(leftOf(sib)) == BLACK) {
                     setColor(sib, RED);
                     x = parentOf(x);
                 } else {
