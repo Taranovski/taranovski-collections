@@ -347,7 +347,7 @@ public class MyTreeMap<K, V> implements MyMap<K, V> {
 
     /**
      *
-     * @param treeNodeToRotateLeft
+     * @param p
      */
     private void rotateLeft(MyTreeMapEntry<K, V> p) {
         if (p != null) {
@@ -371,7 +371,7 @@ public class MyTreeMap<K, V> implements MyMap<K, V> {
 
     /**
      *
-     * @param treeNodeToRotateRight
+     * @param p
      */
     private void rotateRight(MyTreeMapEntry<K, V> p) {
         if (p != null) {
@@ -395,9 +395,10 @@ public class MyTreeMap<K, V> implements MyMap<K, V> {
 
     /**
      *
-     * @param x
+     * @param x1
      */
-    private void fixAfterInsertion(MyTreeMapEntry<K, V> x) {
+    private void fixAfterInsertion(MyTreeMapEntry<K, V> x1) {
+        MyTreeMapEntry<K, V> x = x1;
         x.color = RED;
 
         while (x != null && x != head && x.parent.color == RED) {
@@ -462,7 +463,7 @@ public class MyTreeMap<K, V> implements MyMap<K, V> {
 
     /**
      *
-     * @param myTreeMapNodeToFindSuccessor
+     * @param t
      * @return
      */
     private MyTreeMapEntry<K, V> successor(MyTreeMapEntry<K, V> t) {
@@ -487,9 +488,10 @@ public class MyTreeMap<K, V> implements MyMap<K, V> {
 
     /**
      *
-     * @param myTreeMapNodeToDelete
+     * @param p1
      */
-    private void deleteEntry(MyTreeMapEntry<K, V> p) {
+    private void deleteEntry(MyTreeMapEntry<K, V> p1) {
+        MyTreeMapEntry<K, V> p = p1;
         size--;
 
         // If strictly internal, copy successor's element to p and then make p
@@ -545,9 +547,10 @@ public class MyTreeMap<K, V> implements MyMap<K, V> {
 
     /**
      *
-     * @param treeMapNodeToFix
+     * @param x1
      */
-    private void fixAfterDeletion(MyTreeMapEntry<K, V> x) {
+    private void fixAfterDeletion(MyTreeMapEntry<K, V> x1) {
+        MyTreeMapEntry<K, V> x = x1;
         while (x != head && colorOf(x) == BLACK) {
             if (x == leftOf(parentOf(x))) {
                 MyTreeMapEntry<K, V> sib = rightOf(parentOf(x));
@@ -576,7 +579,8 @@ public class MyTreeMap<K, V> implements MyMap<K, V> {
                     rotateLeft(parentOf(x));
                     x = head;
                 }
-            } else { // symmetric
+            } else {
+            // symmetric
                 MyTreeMapEntry<K, V> sib = leftOf(parentOf(x));
 
                 if (colorOf(sib) == RED) {
