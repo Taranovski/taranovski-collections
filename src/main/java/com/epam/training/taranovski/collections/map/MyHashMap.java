@@ -226,7 +226,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
      *
      */
     private void ensureCapacity() {
-        double currentFillRate = size / bucketNumber;
+        double currentFillRate = (double) size / bucketNumber;
         if (currentFillRate > loadFactor & bucketNumber < MAX_BUCKET_NUMBER) {
             Iterator<? extends MyEntry<K, V>> iterator = this.entryIterator();
 
@@ -298,14 +298,14 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
      * @return
      */
     @Override
-    public Iterator<? extends MyEntry<K, V>> entryIterator() {
-        return new MyHashMapEntryIterator<K, V>(this);
+    public Iterator<MyEntry<K, V>> entryIterator() {
+        return new MyHashMapEntryIterator<>(this);
     }
 
     /**
      *
      */
-    private class MyHashMapEntryIterator<K, V> implements Iterator<MyHashMapEntry<K, V>> {
+    private class MyHashMapEntryIterator<K, V> implements Iterator<MyEntry<K, V>> {
 
         private MyHashMap map;
         private List<MyHashMapEntry<K, V>> list = new LinkedList<>();

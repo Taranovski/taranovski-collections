@@ -17,21 +17,21 @@ import java.util.Iterator;
  * @param <K>
  * @param <V>
  */
-public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
+public class MyTreeMap<K, V> implements MyMap<K, V> {
 
     private static final boolean RED = false;
     private static final boolean BLACK = true;
 
     private int size;
     private MyTreeMapEntry<K, V> head;
-    private Comparator<K> comparator;
+    private final Comparator<K> comparator;
 
     /**
      *
      * @param <K>
      * @param <V>
      */
-    public static class MyTreeMapEntry<K extends Comparable, V> implements MyEntry<K, V> {
+    public static class MyTreeMapEntry<K, V> implements MyEntry<K, V> {
 
         private K key;
         private V value;
@@ -119,8 +119,8 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      * @param p
      * @return
      */
-    private static <K extends Comparable, V> boolean colorOf(MyTreeMapEntry<K, V> p) {
-        return (p == null ? BLACK : p.color);
+    private static <K, V> boolean colorOf(MyTreeMapEntry<K, V> p) {
+        return (p == null) ? BLACK : p.color;
     }
 
     /**
@@ -130,8 +130,8 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      * @param p
      * @return
      */
-    private static <K extends Comparable, V> MyTreeMapEntry<K, V> parentOf(MyTreeMapEntry<K, V> p) {
-        return (p == null ? null : p.parent);
+    private static <K, V> MyTreeMapEntry<K, V> parentOf(MyTreeMapEntry<K, V> p) {
+        return (p == null) ? null : p.parent;
     }
 
     /**
@@ -141,7 +141,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      * @param p
      * @param c
      */
-    private static <K extends Comparable, V> void setColor(MyTreeMapEntry<K, V> p, boolean c) {
+    private static <K, V> void setColor(MyTreeMapEntry<K, V> p, boolean c) {
         if (p != null) {
             p.color = c;
         }
@@ -154,7 +154,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      * @param p
      * @return
      */
-    private static <K extends Comparable, V> MyTreeMapEntry<K, V> leftOf(MyTreeMapEntry<K, V> p) {
+    private static <K, V> MyTreeMapEntry<K, V> leftOf(MyTreeMapEntry<K, V> p) {
         return (p == null) ? null : p.left;
     }
 
@@ -165,7 +165,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      * @param p
      * @return
      */
-    private static <K extends Comparable, V> MyTreeMapEntry<K, V> rightOf(MyTreeMapEntry<K, V> p) {
+    private static <K, V> MyTreeMapEntry<K, V> rightOf(MyTreeMapEntry<K, V> p) {
         return (p == null) ? null : p.right;
     }
 
@@ -203,7 +203,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
         }
         MyTreeMapEntry<K, V> node = head;
         while (node != null) {
-            int cmp = key.compareTo(node.getKey());
+            int cmp = ((Comparable) key).compareTo(node.getKey());
             if (cmp < 0) {
                 node = node.left;
             } else if (cmp > 0) {
@@ -499,10 +499,11 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
             p.key = s.key;
             p.value = s.value;
             p = s;
-        } // p has 2 children
+        }
+        // p has 2 children
 
         // Start fixup at replacement node, if it exists.
-        MyTreeMapEntry<K, V> replacement = (p.left != null ? p.left : p.right);
+        MyTreeMapEntry<K, V> replacement = (p.left != null) ? p.left : p.right;
 
         if (replacement != null) {
             // Link replacement to parent
@@ -522,9 +523,11 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
             if (p.color == BLACK) {
                 fixAfterDeletion(replacement);
             }
-        } else if (p.parent == null) { // return if we are the only node.
+        } else if (p.parent == null) { 
+            // return if we are the only node.
             head = null;
-        } else { //  No children. Use self as phantom replacement and unlink.
+        } else { 
+            //  No children. Use self as phantom replacement and unlink.
             if (p.color == BLACK) {
                 fixAfterDeletion(p);
             }
@@ -620,8 +623,8 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
      * @return
      */
     @Override
-    public Iterator<? extends MyEntry<K, V>> entryIterator() {
-        return new MyTreeMapEntryIterator<>();
+    public Iterator<MyEntry<K, V>> entryIterator() {
+        return new MyTreeMapEntryIterator();
     }
 
     /**
@@ -641,7 +644,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
     /**
      *
      */
-    private class MyTreeMapEntryIterator<T extends MyTreeMapEntry<K, V>> implements Iterator<MyTreeMapEntry<K, V>> {
+    private class MyTreeMapEntryIterator implements Iterator<MyEntry<K, V>> {
 
         private MyTreeMapEntry<K, V> nextForIterator;
         private MyTreeMapEntry<K, V> lastReturnedForIterator;
@@ -669,7 +672,7 @@ public class MyTreeMap<K extends Comparable, V> implements MyMap<K, V> {
          * @return
          */
         @Override
-        public MyTreeMapEntry<K, V> next() {
+        public MyEntry<K, V> next() {
             tempNodeForIterator = nextForIterator;
             if (tempNodeForIterator == null) {
                 throw new MyNoSuchElementException();

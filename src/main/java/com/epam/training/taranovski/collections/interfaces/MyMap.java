@@ -31,7 +31,7 @@ public interface MyMap<K, V> {
 
     int size();
 
-    Iterator<? extends MyEntry<K, V>> entryIterator();
+    Iterator<MyEntry<K, V>> entryIterator();
 
     interface MyEntry<K, V> {
 
