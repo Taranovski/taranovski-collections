@@ -15,6 +15,7 @@ import java.util.Comparator;
  * @author user
  */
 public class MyCollections {
+    private static final int TWO = 2;
 
     private MyCollections() {
     }
@@ -92,7 +93,7 @@ public class MyCollections {
         }
 
         int size = list.size();
-        int half = size / 2;
+        int half = size / TWO;
         for (int i = 0; i < half; i++) {
             swap(list, i, size - i - 1);
         }
@@ -130,7 +131,7 @@ public class MyCollections {
             }
         }
 
-        int middle = start + (end - start) / 2;
+        int middle = start + (end - start) / TWO;
         if (key.compareTo((Comparable) list.get(middle)) > 0) {
             return bisectionSearch(list, key, middle, end);
         } else if (key.compareTo((Comparable) list.get(middle)) < 0) {
@@ -151,7 +152,7 @@ public class MyCollections {
         int i = low;
         int j = high;
         // Get the pivot element from the middle of the list
-        Object pivot = list.get(low + (high - low) / 2);
+        Object pivot = list.get(low + (high - low) / TWO);
 
         // Divide into two lists
         while (i <= j) {
@@ -237,7 +238,7 @@ public class MyCollections {
         int i = low;
         int j = high;
 // Get the pivot element from the middle of the list
-        Object pivot = list.get(low + (high - low) / 2);
+        Object pivot = list.get(low + (high - low) / TWO);
 
         // Divide into two lists
         while (i <= j) {
@@ -313,6 +314,5 @@ public class MyCollections {
             min = lowBound;
             max = highBound;
         }
-
     }
 }
